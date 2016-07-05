@@ -1,0 +1,21 @@
+-- Table: public.users
+
+-- DROP TABLE public.users;
+
+CREATE TABLE public.users
+(
+  username text, -- Username of the user at login
+  name text, -- Full name of the user
+  creation_date date NOT NULL -- Date of the creation of the user in the system
+)
+WITH (
+  OIDS=TRUE
+);
+ALTER TABLE public.users
+  OWNER TO mathieu;
+COMMENT ON TABLE public.users
+  IS 'list of all user in the system';
+COMMENT ON COLUMN public.users.username IS 'Username of the user at login';
+COMMENT ON COLUMN public.users.name IS 'Full name of the user';
+COMMENT ON COLUMN public.users.creation_date IS 'Date of the creation of the user in the system';
+

@@ -1,0 +1,29 @@
+-- Table: public.result
+
+-- DROP TABLE public.result;
+
+CREATE TABLE public.result
+(
+  username text,
+  filenameid integer NOT NULL, -- File ID that is link with the golden img.
+  success boolean NOT NULL, -- Did it succede the Test
+  fail_passed boolean, -- The img was suppose to fail, but user clicked Pass.
+  positive_failed boolean, -- The img as suppose to Pass but the user click failed.
+  delta_criteria_1 integer, -- Deta between the selection and the target (golden)
+  inspection_date date NOT NULL,
+  user_comments text -- Comment from the user
+)
+WITH (
+  OIDS=TRUE
+);
+ALTER TABLE public.result
+  OWNER TO mathieu;
+COMMENT ON TABLE public.result
+  IS 'Where all the resulting table will be push to.';
+COMMENT ON COLUMN public.result.filenameid IS 'File ID that is link with the golden img.';
+COMMENT ON COLUMN public.result.success IS 'Did it succede the Test';
+COMMENT ON COLUMN public.result.fail_passed IS 'The img was suppose to fail, but user clicked Pass.';
+COMMENT ON COLUMN public.result.positive_failed IS 'The img as suppose to Pass but the user click failed.';
+COMMENT ON COLUMN public.result.delta_criteria_1 IS 'Deta between the selection and the target (golden)';
+COMMENT ON COLUMN public.result.user_comments IS 'Comment from the user';
+
