@@ -25,11 +25,11 @@ var server = http.createServer(function(req, res) {
     res.end('An error occurred');
   };
 
-  pool.query('INSERT INTO visit (date) VALUES ($1)', [new Date()], function(err) {
+  pool.query('INSERT INTO visit (date) VALUES ($1)', [new Date()], function(err, middleresp) {
     if (err) return onError(err);
-    console.log("This write to the server????");
+    console.log("This write to the server????", middleresp);
     // get the total number of visits today (including the current visit)
-    pool.query('SELECT COUNT(NULLIF(false, golden.passfail)) AS passimg, COUNT(NULLIF(true, golden.passfail)) AS failedimg FROM public.golden', function(err, result) {
+    pool.query('SELECT * FROM public.goldencount', function(err, result) {
       // handle an error from the query
       if(err) return onError(err);
       res.writeHead(200, {'content-type': 'text/plain'});
