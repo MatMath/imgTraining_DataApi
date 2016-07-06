@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 // File load
 var passfailgoldens = require('./routes/passfailgolden');
 var goldens = require('./routes/golden');
+var users = require('./routes/user');
 
 var app = express();
 
@@ -20,6 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routing
 app.use('/passfailgolden', passfailgoldens);
 app.use('/golden', goldens);
+app.use('/users', users);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
