@@ -11,6 +11,10 @@ var results = require('./routes/result');
 
 var app = express();
 
+var env = process.env.NODE_ENV || 'development';
+app.locals.ENV = env;
+app.locals.ENV_DEVELOPMENT = env == 'development';
+
 app.use(cors());
 
 app.use(bodyParser.json());
@@ -35,7 +39,7 @@ app.use(function(req, res, next) {
 /// error handlers
 // development error handler
 // will print stacktrace
-// if (app.get('env') === 'development') {
+if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {
@@ -44,7 +48,7 @@ app.use(function(req, res, next) {
             title: 'error'
         });
     });
-// }
+}
 
 // production error handler
 // no stacktraces leaked to user

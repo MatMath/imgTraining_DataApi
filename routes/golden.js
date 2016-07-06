@@ -28,13 +28,13 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-  // $ curl --data "filename=someFilename&url=&'somekittenUrl'description=Unpeuplus&criteria_target1=4&creation_date=2016-07-01&passfail=true&explanation=nothing" localhost:3000/golden
+  // $ curl --data "filename=someFilename&url=&'somekittenUrl'description=Unpeuplus&criteria_target1=4&passfail=true&explanation=nothing" localhost:3000/golden
   var data = {
     'filename': req.body.filename,
     'url': req.body.url,
     'description': req.body.description,
     'criteria_target1': req.body.criteria_target1,
-    'creation_date': req.body.creation_date,
+    'creation_date': new Date(),
     'passfail': req.body.passfail,
     'explanation': req.body.explanation
   };

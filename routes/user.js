@@ -28,11 +28,11 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-  // $ curl --data "username=newUserName&name=Mathieu Legault&creation_date=2016-07-05" localhost:3000/users
+  // $ curl --data "username=newUserName&name=Mathieu Legault" localhost:3000/user
   var data = {
     username: req.body.username,
     name: req.body.name,
-    creation_date: req.body.creation_date
+    creation_date: new Date()
   };
 
   // Optimisation/refactor needed here once I understand more.
