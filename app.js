@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 
 // File load
 var passfailgoldens = require('./routes/passfailgolden');
+var goldens = require('./routes/golden');
 
 var app = express();
 
@@ -18,6 +19,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Routing
 app.use('/passfailgolden', passfailgoldens);
+app.use('/golden', goldens);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -29,7 +31,7 @@ app.use(function(req, res, next) {
 /// error handlers
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
+// if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {
@@ -38,7 +40,7 @@ if (app.get('env') === 'development') {
             title: 'error'
         });
     });
-}
+// }
 
 // production error handler
 // no stacktraces leaked to user

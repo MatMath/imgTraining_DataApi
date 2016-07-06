@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Pool = require('pg').Pool;
 
+
 var config = {
   host: 'localhost',
   user: 'mathieu',
@@ -23,22 +24,24 @@ process.on('unhandledRejection', function(e) {
 
 var pool = new Pool(config);
 
-/* GET the total number of good and bad images inside the Golden sample DB. */
-router.get('/', function(req, res, next) {
-  console.log("Inside The Golden Request");
-
-    pool.query('SELECT * FROM public.goldencount', function(err, result) {
+router.get('/', function(req, res) {
+    pool.query('SELECT * FROM public.golden', function(err, result) {
       // handle an error from the query
       if(err) return onError(err);
       // console.log(result.rows);
-      res.json(result.rows);
+        res.json(result.rows);
     });
 });
 
+router.post('/', function(req, res) {
+
+});
+
+
+
+router.put('/:id', function(req, res) {
+
+});
+
+
 module.exports = router;
-
-
-
-
-
-
