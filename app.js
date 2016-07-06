@@ -4,9 +4,10 @@ var cors = require('cors');
 var bodyParser = require('body-parser');
 
 // File load
-var passfailgoldens = require('./routes/passfailgolden');
+var views = require('./routes/view');
 var goldens = require('./routes/golden');
 var users = require('./routes/user');
+var results = require('./routes/result');
 
 var app = express();
 
@@ -19,9 +20,10 @@ app.use(bodyParser.urlencoded({
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routing
-app.use('/passfailgolden', passfailgoldens);
+app.use('/view', views);
 app.use('/golden', goldens);
-app.use('/users', users);
+app.use('/user', users);
+app.use('/result', results);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

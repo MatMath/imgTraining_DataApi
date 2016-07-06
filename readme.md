@@ -35,3 +35,9 @@ Average time for inspection per user.
 Total system Good img vs Bad img.
 Total system Nbr Error 1, 2, 3, 4... 
 Calender view of all user progress (% succes vs NbrPer day D3?).
+
+
+TODO: Add end to end test for the Full flow:
+	If exist (clean db): delete(user, img, result)
+	then: crate user, add img, add result, 
+	then Cleanup: delete (user, img, result)
