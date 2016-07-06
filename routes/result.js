@@ -20,9 +20,20 @@ process.on('unhandledRejection', function(e) {
 var pool = new Pool(config);
 
 router.get('/', function(req, res) {
+  // TODO Security: Check the current user role?
   pool.query('SELECT * FROM public.result', function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
+    res.json(result.rows);
+  });
+});
+
+router.get('/:username', function(req, res) {
+  // TODO Security: Could check the Username with current logued user ?
+  var usernameid = req.params.username;
+  pool.query('SELECT * FROM public.result WHERE username = ($1)', [usernameid], function(err, result) {
+    // handle an error from the query
+    if (err) {return res.json(err); }
     res.json(result.rows);
   });
 });
