@@ -1,6 +1,12 @@
-## Build flow:
+## Description
+This is the backend of another project that is design to help train people on accepting/Rejecting golden images.
+The node module do not create the DB, but could easily. The schema of the DB is inside a folder for reference/backup.
 
-Step1: 
+Running it: $ node app.js
+Testing it: $ jasmine-node test/app-spec.js
+
+## Build flow:
+Step1: (done)
 Add following routes so we can connect the front-end all the way to the DB.
 	- Post new Golden Sample '/golden/'
 	- Post new User '/users/'
@@ -8,12 +14,13 @@ Add following routes so we can connect the front-end all the way to the DB.
 
 Step2: 
 	- Re-check with Heather for Needed analytics.
-	- Add Security/OAuth
+	- Add a Random row selector that exclude the user last "100/Good/bad" inspection. --> Customisable???
+	- Add Security/OAuth (to check lotAuth)
+	- Check how OAuth can work with Postgres structure.
 
 Step3:
 	- Validate DB structure and add the routes/querry needed.
 	- Connect the Front-end with new routes.
-
 
 
 ## Analytics needed by the Front-end. 
@@ -35,9 +42,3 @@ Average time for inspection per user.
 Total system Good img vs Bad img.
 Total system Nbr Error 1, 2, 3, 4... 
 Calender view of all user progress (% succes vs NbrPer day D3?).
-
-
-TODO: Add end to end test for the Full flow:
-	If exist (clean db): delete(user, img, result)
-	then: crate user, add img, add result, 
-	then Cleanup: delete (user, img, result)
