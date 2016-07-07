@@ -44,7 +44,16 @@ router.post('/', function(req, res) {
     // handle an error from the query
     if (err) {return res.json(err);}
     // console.log(result.rows);
-    res.json(result.rows);
+    res.json(result);
+  });
+});
+
+router.delete('/:goldenOid', function(req, res) {
+  var goldenOid = req.params.goldenOid;
+  pool.query('DELETE FROM public.golden WHERE oid=($1)', [goldenOid], function(err, result) {
+    // handle an error from the query
+    if (err) {return res.json(err);}
+    res.json(result);
   });
 });
 

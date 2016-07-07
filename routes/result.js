@@ -43,14 +43,14 @@ router.post('/', function(req, res) {
   // $ curl --data "username=mathieuTest&filenameid=123423&success=false&fail_passed=true&delta_criteria_1=2&user_comments=this should fail and have a Failed Positive." localhost:3000/result
 
   var data = {
-    username: req.body.username,
-    filenameid: req.body.filenameid,
-    success: req.body.success,
-    fail_passed: req.body.fail_passed,
-    positive_failed: req.body.positive_failed || null,
-    delta_criteria_1: req.body.delta_criteria_1 || null,
-    inspection_date: new Date(),
-    user_comments: req.body.user_comments
+    'username': req.body.username,
+    'filenameid': req.body.filenameid,
+    'success': req.body.success,
+    'fail_passed': req.body.fail_passed || null,
+    'positive_failed': req.body.positive_failed || null,
+    'delta_criteria_1': req.body.delta_criteria_1 || null,
+    'inspection_date': new Date(),
+    'user_comments': req.body.user_comments
   };
 
   // Optimisation/refactor needed here once I understand more.
@@ -58,7 +58,25 @@ router.post('/', function(req, res) {
     // handle an error from the query
     if (err) {return res.json(err);}
     // console.log(res.rows);
-    res.json(result.rows);
+    res.json(result);
+  });
+});
+
+router.delete('/id/:resultOid', function(req, res) {
+  var resultOid = req.params.resultOid;
+  pool.query('DELETE FROM public.result WHERE oid=($1)', [resultOid], function(err, result) {
+    // handle an error from the query
+    if (err) {return res.json(err);}
+    res.json(result);
+  });
+});
+
+router.delete('/all/:goldenImgId', function(req, res) {
+  var goldenId = req.params.goldenImgId;
+  pool.query('DELETE FROM public.result WHERE filenameid=($1)', [goldenId], function(err, result) {
+    // handle an error from the query
+    if (err) {return res.json(err);}
+    res.json(result);
   });
 });
 

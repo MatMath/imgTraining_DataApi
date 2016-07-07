@@ -39,8 +39,17 @@ router.post('/', function(req, res) {
   pool.query('INSERT INTO users(username, name, creation_date) VALUES($1, $2, $3)', [data.username, data.name, data.creation_date], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
-    // console.log(result.rows);
-    res.json(result.rows);
+    // This return the user oid and other info.
+    res.json(result);
+  });
+});
+
+router.delete('/:username', function(req, res) {
+  var usernameid = req.params.username;
+  pool.query('DELETE FROM public.users WHERE username=($1)', [usernameid], function(err, result) {
+    // handle an error from the query
+    if (err) {return res.json(err);}
+    res.json(result);
   });
 });
 
