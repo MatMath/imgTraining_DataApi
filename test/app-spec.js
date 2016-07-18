@@ -26,7 +26,7 @@ this.addMatchers({});
 
 var request = require("request");
 
-var base_url = "http://localhost:3000/";
+var base_url_api = "http://localhost:3000/api/";
 
 var testingUser = {
 		username: 'jasmineTest',
@@ -38,7 +38,7 @@ describe("Testing the Creation of a user", function() {
 	describe("GET & POST /user", function() {
 		// Ger the initial Nbr of user:
 		it("should return the initial number of user", function(done) {
-			request.get(base_url + 'user', function(error, response, body) {
+			request.get(base_url_api + 'user', function(error, response, body) {
 				nbrOfUserInit = JSON.parse(body).length;
 				console.log("nbrOfUser is: ", nbrOfUserInit);
 				expect(nbrOfUserInit).toBeGreaterThan(2);
@@ -48,14 +48,14 @@ describe("Testing the Creation of a user", function() {
 
 		it("Add the test user", function(done) {
 			// TODO: Add a feedback to the user
-			request.post(base_url + 'user', {form: testingUser}, function(error, response, body) {
+			request.post(base_url_api + 'user', {form: testingUser}, function(error, response, body) {
 				expect(JSON.parse(body).oid).toBeDefined(); //index of the user
 				done();
 			});
 		});
 
 		it("Should have 1 more user in the list", function(done) {
-			request.get(base_url + 'user', function(error, response, body) {
+			request.get(base_url_api + 'user', function(error, response, body) {
 				expect(JSON.parse(body).length - nbrOfUserInit).toEqual(1);
 				done();
 			});
@@ -78,7 +78,7 @@ describe("Testing the Creation and removal of a Golden image", function() {
 		
 		// Ger the initial Nbr of Golden Images in the system:
 		it("should return the initial number of golden img", function(done) {
-			request.get(base_url + 'golden', function(error, response, body) {
+			request.get(base_url_api + 'golden', function(error, response, body) {
 				nbrOfgoldenImg = JSON.parse(body).length;
 				console.log("nbrOfgoldenImg is: ", nbrOfgoldenImg);
 				expect(nbrOfgoldenImg).toBeGreaterThan(2);
@@ -88,7 +88,7 @@ describe("Testing the Creation and removal of a Golden image", function() {
 
 		it("Add one Golden Img", function(done) {
 			// TODO: Add a feedback to the user
-			request.post(base_url + 'golden', {form: newGoldenImg}, function(error, response, body) {
+			request.post(base_url_api + 'golden', {form: newGoldenImg}, function(error, response, body) {
 				var parsedAns = JSON.parse(body);
 				goldenOid = parsedAns.oid;
 				console.log("New GoldenImg ID:", parsedAns.oid);
@@ -98,14 +98,14 @@ describe("Testing the Creation and removal of a Golden image", function() {
 		});
 
 		it("Should have 1 more image in the list", function(done) {
-			request.get(base_url + 'golden', function(error, response, body) {
+			request.get(base_url_api + 'golden', function(error, response, body) {
 				expect(JSON.parse(body).length - nbrOfgoldenImg).toEqual(1);
 				done();
 			});
 		});
 
 		it("Should delete only 1 golden test image", function(done) {
-			request.delete(base_url + 'golden/' + goldenOid, function(error, response, body) {
+			request.delete(base_url_api + 'golden/' + goldenOid, function(error, response, body) {
 				// console.log(body);
 				expect(JSON.parse(body).rowCount).toEqual(1);
 				done();
@@ -129,7 +129,7 @@ var resultOid = null;
 describe("Adding new result, ", function(){
 	describe('Check the result and adding new one', function() {
 		it("Should get the initial nbr of results for all user", function(done) {
-			request.get(base_url + 'result', function(err, resp, body) {
+			request.get(base_url_api + 'result', function(err, resp, body) {
 				nbrOfResult = JSON.parse(body).length;
 				console.log("Initial Nbr of result in DB:", nbrOfResult);
 				expect(nbrOfResult).toBeGreaterThan(2);
@@ -138,7 +138,7 @@ describe("Adding new result, ", function(){
 		});
 
 		it('should check the Nbr of result for that user is 0', function(done) {
-			request.get(base_url + 'result/' + testingUser.username, function(err, resp, body){
+			request.get(base_url_api + 'result/' + testingUser.username, function(err, resp, body){
 				// console.log("Body in nbrResult0:",body);
 				expect(JSON.parse(body).length).toEqual(0);
 				done();
@@ -146,7 +146,7 @@ describe("Adding new result, ", function(){
 		});
 
 		it('Should post 1 result for that user', function(done) {
-			request.post(base_url + 'result', {form: newResult}, function(err, resp, body) {
+			request.post(base_url_api + 'result', {form: newResult}, function(err, resp, body) {
 				var parsedAns = JSON.parse(body);
 				resultOid = parsedAns.oid;
 				expect(resultOid).toBeDefined();
@@ -155,7 +155,7 @@ describe("Adding new result, ", function(){
 		});
 
 		it('should check the Nbr of result for that user is now 1', function(done) {
-			request.get(base_url + 'result/' + testingUser.username, function(err,resp, body){
+			request.get(base_url_api + 'result/' + testingUser.username, function(err,resp, body){
 				// console.log("The result resultOid is persistant? ", resultOid);
 				expect(JSON.parse(body).length).toEqual(1);
 				done();
@@ -164,7 +164,7 @@ describe("Adding new result, ", function(){
 
 		// Check all the view here with the new img we just added
 		it('Check the view passfailresult for the user', function(done) {
-			request.get(base_url + 'view/passfailresult/' + testingUser.username, function(err, resp, body) {
+			request.get(base_url_api + 'view/passfailresult/' + testingUser.username, function(err, resp, body) {
 				expect(JSON.parse(body).length).toEqual(1);
 				done();
 			});
@@ -173,7 +173,7 @@ describe("Adding new result, ", function(){
 		it("Should delete The last test created", function(done) {
 			// This is more for cleanup when we have to restart the test multiple time
 			console.log("trying to delete result#: ", resultOid);
-			request.delete(base_url + 'result/id/' + resultOid, function(error, response, body) {
+			request.delete(base_url_api + 'result/id/' + resultOid, function(error, response, body) {
 				console.log(body);
 				expect(JSON.parse(body).rowCount).toEqual(1);
 				done();
@@ -189,7 +189,7 @@ describe("Testing the Cleanup of alltest at the end", function() {
 		it("Should delete all result with Golden Img Test", function(done) {
 			// This is more for cleanup when we have to restart the test multiple time
 			console.log("trying to delete result#: ", newResult.filenameid);
-			request.delete(base_url + 'result/all/' + newResult.filenameid, function(error, response, body) {
+			request.delete(base_url_api + 'result/all/' + newResult.filenameid, function(error, response, body) {
 				console.log(body);
 				expect(JSON.parse(body).rowCount).toEqual(0);
 				done();
@@ -200,7 +200,7 @@ describe("Testing the Cleanup of alltest at the end", function() {
 	describe("Delete /user/:username", function() {
 		it("Should delete only 1 test user", function(done) {
 			// Note: This can fail if we started a test and it failed and we remove more than 1 user, Later, make the user creation Unique in the DB.
-			request.delete(base_url + 'user/' + testingUser.username, function(error, response, body) {
+			request.delete(base_url_api + 'user/' + testingUser.username, function(error, response, body) {
 				expect(JSON.parse(body).rowCount).toEqual(1);
 				done();
 			});

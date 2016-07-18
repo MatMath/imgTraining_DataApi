@@ -19,8 +19,8 @@ process.on('unhandledRejection', function(e) {
 var pool = new Pool(config);
 router.get('/', function(req, res, next) {
   res.writeHead(200, {'content-type': 'text/plain'});
-  res.end('Possible Views: \n ' +
-    '/view/pfgolden (Give the Total Passign and Failling image inside the Golden Sample DB.) \n ' +
+  res.end('Possible Views: \n' +
+    '/view/pfgolden (Give the Total Passign and Failling image inside the Golden Sample DB.) \n' +
     '/view/passfailresult (Count the Total Pass + Fail Positive + Fail Negative for all user.) \n' +
     '/view/passfailresult/:username (Count the Total Pass + Fail Positive + Fail Negative for this user.)');
 });
