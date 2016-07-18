@@ -12,6 +12,7 @@ var goldens = require('./routes/golden');
 var users = require('./routes/user');
 var results = require('./routes/result');
 var login = require('./routes/login');
+var utils = require('./utils');
 
 // Security layer:
 var passport = require('passport');
@@ -22,12 +23,29 @@ var GOOGLE_CLIENT_ID      = process.env.GOOGLE_CLIENT_ID;
 var GOOGLE_CLIENT_SECRET  = process.env.GOOGLE_CLIENT_SECRET;
 
 // Passport session setup.
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function(googUserInfo, done) {
+  // Note: This get called only once on the callback from Google.
+  
+  // Step1: Extract only the info we need.
+  var user = {
+    email: googUserInfo.email,
+    username: googUserInfo.name.givenName,
+    name: googUserInfo.displayName
+  };
   console.log("serialisation:", user);
+  // name include Family and given : {
+  //   familyName: 'Chiodo',
+  //   givenName: 'Mathieu'
+  // },
+  // Here it could be in a promesses or something or we keep it asynch
+  utils.doesUserExist(user);
+  // eater case if exist already or not just continue since we have all info from Google.
   done(null, user);
+  // Step2: Save the user data in the DB is it dosent exist. --> How to save a user in DB befire it finish authentication? in the deserialisation maybe?
 });
 passport.deserializeUser(function(obj, done) {
-    console.log("deserialisation: ",obj);
+    // Note: This get call at each routes we get that are secured.
+    console.log("deserialisation: ", obj);
     // Not sure what to do with this yet.
   done(null, obj);
 });
@@ -71,13 +89,13 @@ app.get('/auth/google',
 // GET /auth/google/callback
 app.get( '/auth/google/callback',
         passport.authenticate( 'google', { 
-            successRedirect: '/',
+            successRedirect: '/api/view',
             failureRedirect: '/login'
     }));
 
 app.get('/logout', function(req, res){
   req.logout();
-  res.redirect('/');
+  res.redirect('/login');
 });
 // End of the security layer
 
@@ -104,6 +122,9 @@ app.use('/api/user', ensureAuthenticated, users);
 app.use('/api/result', ensureAuthenticated, results);
 app.use('/', login);
 app.use('/login', login);
+
+// When all authenticated we can load the app and make sure all routes inside the app are secured.
+
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

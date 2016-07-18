@@ -39,8 +39,8 @@ router.get('/:username', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-  // $ curl --data "username=mathieuTest&filenameid=123422&success=false&positive_failed=true&delta_criteria_1=-2&user_comments=this should fail and have a positive fail." localhost:3000/result
-  // $ curl --data "username=mathieuTest&filenameid=123423&success=false&fail_passed=true&delta_criteria_1=2&user_comments=this should fail and have a Failed Positive." localhost:3000/result
+  // $ curl --data "username=mathieuTest&filenameid=123422&success=false&positive_failed=true&delta_criteria_1=-2&user_comments=this should fail and have a positive fail." localhost:8010/result
+  // $ curl --data "username=mathieuTest&filenameid=123423&success=false&fail_passed=true&delta_criteria_1=2&user_comments=this should fail and have a Failed Positive." localhost:8010/result
 
   var data = {
     'username': req.body.username,

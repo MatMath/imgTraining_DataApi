@@ -28,7 +28,7 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-  // $ curl --data "filename=someFilename&url=&'somekittenUrl'description=Unpeuplus&criteria_target1=4&passfail=true&explanation=nothing" localhost:3000/golden
+  // $ curl --data "filename=someFilename&url=&'somekittenUrl'description=Unpeuplus&criteria_target1=4&passfail=true&explanation=nothing" localhost:8010/golden
   var data = {
     'filename': req.body.filename,
     'url': req.body.url,

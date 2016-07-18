@@ -26,10 +26,11 @@ this.addMatchers({});
 
 var request = require("request");
 
-var base_url_api = "http://localhost:3000/api/";
+var base_url_api = "http://localhost:8010/api/";
 
 var testingUser = {
 		username: 'jasmineTest',
+		email: 'greattest@gmail.com',
 		name: 'Jasmine is Hot'
 };
 var nbrOfUserInit = 0;
