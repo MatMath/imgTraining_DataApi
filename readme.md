@@ -1,28 +1,27 @@
 ## Description
 This is the backend of another project that is design to help train people on accepting/Rejecting golden images.
-The node module do not create the DB, but could easily. The schema of the DB is inside a folder for reference/backup.
+The node module do not create the DB, but could easily later. The schema of the DB is inside a folder for reference/backup.
 
 Multiple level:
 Security: The Node app will only display the login section if the user is not login.
 API level: Some routes are for information and some other routes are the Data itself.
 The app will be loaded when the Node pass the security layer.
 
-
-Running it: $ node app.js
-Testing it: $ jasmine-node test/app-spec.js
+Pre-requisite: Having Postgress running with the DB (dump of it in the dbStructureData or you can easily create it directly.)
+Running: $ node app.js
+Testing: $ jasmine-node test
 
 ## Build flow:
 Step1: (done)
-Add following routes so we can connect the front-end all the way to the DB.
-	- Post new Golden Sample '/golden/'
-	- Post new User '/users/'
-	- Post new result with user X. '/result/'
+	- Security
+	- Mutliple API routes protected
+	- Query to the DB
+	- Testing
 
-Step2: 
+Step2: (next after building the Front-end)
 	- Re-check with Heather for Needed analytics.
 	- Add a Random row selector that exclude the user last "100/Good/bad" inspection. --> Customisable???
-	- Add Security/OAuth (to check lotAuth)
-	- Check how OAuth can work with Postgres structure.
+	- Adding roles system and security that only certain role have access to certain query.
 
 Step3:
 	- Validate DB structure and add the routes/querry needed.
