@@ -4,7 +4,7 @@
   "description": "Connection to the DB via postgres in node",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine-node test/security-spec.js --verbose;jasmine-node test/app-spec.js --verbose"
   },
   "author": "",
   "license": "ISC",

@@ -24,8 +24,13 @@ beforeEach(function() {
 this.addMatchers({});
 */
 
+process.env.GOOGLE_CLIENT_ID = "fakeID";
+process.env.GOOGLE_CLIENT_SECRET = "fakeSecret";
+// I could test against a real server, but what I really want is to test the flow on my side when I get the answer back with passeport. And it is not good practice to test against a real server.
+// I tried to mock only the receiving answer, but it seems that is is harder than expected... So... I will by-pass the middleware completely when testing
+process.env.FAKE_AUTH = "authenticated"; //This fake the Auth so the user appears to be loguedin.
 var request = require("request");
-
+var myApp = require("../app.js");
 var base_url_api = "http://localhost:8010/api/";
 
 var testingUser = {
@@ -191,7 +196,7 @@ describe("Testing the Cleanup of alltest at the end", function() {
 			// This is more for cleanup when we have to restart the test multiple time
 			console.log("trying to delete result#: ", newResult.filenameid);
 			request.delete(base_url_api + 'result/all/' + newResult.filenameid, function(error, response, body) {
-				console.log(body);
+				// console.log(body);
 				expect(JSON.parse(body).rowCount).toEqual(0);
 				done();
 			});
@@ -203,6 +208,8 @@ describe("Testing the Cleanup of alltest at the end", function() {
 			// Note: This can fail if we started a test and it failed and we remove more than 1 user, Later, make the user creation Unique in the DB.
 			request.delete(base_url_api + 'user/' + testingUser.username, function(error, response, body) {
 				expect(JSON.parse(body).rowCount).toEqual(1);
+				myApp.closeServer(); //this take time, It finish the Test, All Good in 131ms, but dosent close the server until 30sec later.
+				//I probably have a glitch in the Delete function??
 				done();
 			});
 		});

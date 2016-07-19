@@ -44,7 +44,7 @@ passport.serializeUser(function(googUserInfo, done) {
 });
 passport.deserializeUser(function(obj, done) {
     // Note: This get call at each routes we get that are secured.
-    console.log("deserialisation: ", obj);
+    // console.log("deserialisation: ", obj);
     // Not sure what to do with this yet.
   done(null, obj);
 });
@@ -66,7 +66,7 @@ passport.use(new GoogleStrategy({
   }
 ));
 
-app.use( session({ 
+app.use( session({
     secret: 'cookie_secret',
     resave: true,
     saveUninitialized: true
@@ -76,7 +76,11 @@ app.use( passport.session());
 
 // Simple route middleware to ensure user is authenticated.
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
+  if (process.env.FAKE_AUTH === "authenticated") {
+    // console.log("Faking Auth");
+    return next();
+  };
+  if (req.isAuthenticated()) {return next();}
   res.redirect('/login');
 }
 
@@ -166,6 +170,10 @@ app.use(function(err, req, res, next) {
 
 
 app.set('port', process.env.PORT || 8010);
-var server = app.listen(app.get('port'), function() {
+var server = app.listen(8010, function() {
   console.log('Express server listening on port ' + server.address().port);
 });
+
+exports.closeServer = function(){
+  server.close();
+};

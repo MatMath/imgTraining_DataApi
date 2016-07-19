@@ -24,9 +24,15 @@ beforeEach(function() {
 this.addMatchers({});
 */
 
+process.env.GOOGLE_CLIENT_ID = "FakeID";
+process.env.GOOGLE_CLIENT_SECRET = "FakeSecret";
+
 var request = require("request");
+var myApp = require("../app.js");
 var qs = require('querystring');
 var base_url = "http://localhost:8010/";
+console.log("ClientID:", process.env.GOOGLE_CLIENT_ID);
+console.log("Secret:", process.env.GOOGLE_CLIENT_SECRET);
 
 describe('Test redirect of the routes to login: ', function() {
 	it('api/view routes security', function(done) {
@@ -103,8 +109,8 @@ describe('Test redirect of the routes to login: ', function() {
 	it('api/login routes security', function(done) {
 		request.get(base_url + 'api/login', function(err, res, body) {
 			expect(res.request.path).toBe('/login');
+			myApp.closeServer();
 			done();
 		});
 	});
 });
-
