@@ -1,0 +1,12 @@
+<div>
+<h2>Possible Views:</h2> <br>
+	<ul>
+    	<li><a href="/api/view/pfgolden">/view/pfgolden</a> (Give the Total Passign and Failling image inside the Golden Sample DB.)</li>
+    	<li><a href="/api/view/passfailresult">/view/passfailresult</a> (Count the Total Pass + Fail Positive + Fail Negative for all user.)</li>
+	    <% if (!user) { %>
+    		<li><a href="/api/view/passfailresult/:username">/view/passfailresult/(:username)</a>(Count the Total Pass + Fail Positive + Fail Negative for this user.)</li>
+			<% } else { %>
+			<li><a href="/api/view/passfailresult/<%= user.username %>">/view/passfailresult/<%= user.username %></a>(Count the Total Pass + Fail Positive + Fail Negative for this user.)</li>
+			<% } %>
+    </ul>
+</div>

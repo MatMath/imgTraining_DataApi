@@ -11,7 +11,6 @@ var views = require('./routes/view');
 var goldens = require('./routes/golden');
 var users = require('./routes/user');
 var results = require('./routes/result');
-var login = require('./routes/login');
 var utils = require('./utils');
 
 // Security layer:
@@ -38,10 +37,10 @@ passport.serializeUser(function(googUserInfo, done) {
   //   givenName: 'Mathieu'
   // },
   // Here it could be in a promesses or something or we keep it asynch
+  // Step2: Save the user data in the DB is it dosent exist.
   utils.doesUserExist(user);
   // eater case if exist already or not just continue since we have all info from Google.
   done(null, user);
-  // Step2: Save the user data in the DB is it dosent exist. --> How to save a user in DB befire it finish authentication? in the deserialisation maybe?
 });
 passport.deserializeUser(function(obj, done) {
     // Note: This get call at each routes we get that are secured.
@@ -89,7 +88,7 @@ app.get('/auth/google',
 // GET /auth/google/callback
 app.get( '/auth/google/callback',
         passport.authenticate( 'google', { 
-            successRedirect: '/api/view',
+            successRedirect: '/',
             failureRedirect: '/login'
     }));
 
@@ -107,23 +106,30 @@ app.locals.ENV_DEVELOPMENT = env == 'development';
 
 app.use(cors());
 
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(express.static(path.join(__dirname, 'public')));
+
 
 
 
 // API Routing
+app.use('/login', function(req, res){
+  res.render('login', { user: req.user });
+});
 app.use('/api/view', ensureAuthenticated, views);
 app.use('/api/golden', ensureAuthenticated, goldens);
 app.use('/api/user', ensureAuthenticated, users);
 app.use('/api/result', ensureAuthenticated, results);
-app.use('/', login);
-app.use('/login', login);
 
 // When all authenticated we can load the app and make sure all routes inside the app are secured.
+app.use('/', ensureAuthenticated, function(req, res) {
+  res.render('placeholder');
+});  //Here it should link the the Angular App
 
 
 /// catch 404 and forward to error handler

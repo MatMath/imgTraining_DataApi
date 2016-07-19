@@ -2,6 +2,12 @@
 This is the backend of another project that is design to help train people on accepting/Rejecting golden images.
 The node module do not create the DB, but could easily. The schema of the DB is inside a folder for reference/backup.
 
+Multiple level:
+Security: The Node app will only display the login section if the user is not login.
+API level: Some routes are for information and some other routes are the Data itself.
+The app will be loaded when the Node pass the security layer.
+
+
 Running it: $ node app.js
 Testing it: $ jasmine-node test/app-spec.js
 
