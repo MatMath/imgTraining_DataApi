@@ -7,10 +7,11 @@ CREATE TABLE public.golden
   filename text, -- File name that will show to the user.
   url text NOT NULL, -- URL of where the Img is.
   description text, -- Description if the Image to help the trainee, can include link and generic comments.
-  "1_criteria_target" integer, -- Criteria of the target to try to achieve
   creation_date date,
   passfail boolean NOT NULL, -- Define if the img pass or Fail
-  explanation text -- Explanation on why the Img should be Accepted or Rejected
+  explanation text, -- Explanation on why the Img should be Accepted or Rejected
+  type text, -- Type of the img
+  criteria_array text -- Array in sequence of all criteria
 )
 WITH (
   OIDS=TRUE
@@ -22,7 +23,8 @@ COMMENT ON TABLE public.golden
 COMMENT ON COLUMN public.golden.filename IS 'File name that will show to the user.';
 COMMENT ON COLUMN public.golden.url IS 'URL of where the Img is.';
 COMMENT ON COLUMN public.golden.description IS 'Description if the Image to help the trainee, can include link and generic comments.';
-COMMENT ON COLUMN public.golden."1_criteria_target" IS 'Criteria of the target to try to achieve';
 COMMENT ON COLUMN public.golden.passfail IS 'Define if the img pass or Fail';
 COMMENT ON COLUMN public.golden.explanation IS 'Explanation on why the Img should be Accepted or Rejected';
+COMMENT ON COLUMN public.golden.type IS 'Type of the img';
+COMMENT ON COLUMN public.golden.criteria_array IS 'Array in sequence of all criteria';
 

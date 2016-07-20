@@ -39,22 +39,23 @@ router.get('/:username', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-  // $ curl --data "username=mathieuTest&filenameid=123422&success=false&positive_failed=true&delta_criteria_1=-2&user_comments=this should fail and have a positive fail." localhost:8010/result
-  // $ curl --data "username=mathieuTest&filenameid=123423&success=false&fail_passed=true&delta_criteria_1=2&user_comments=this should fail and have a Failed Positive." localhost:8010/result
+  // $ curl --data "username=mathieuTest&filenameid=123422&success=false&positive_failed=true&delta_criteria_array=-2&user_comments=this should fail and have a positive fail." localhost:8010/result
+  // $ curl --data "username=mathieuTest&filenameid=123423&success=false&fail_passed=true&delta_criteria_array=2&user_comments=this should fail and have a Failed Positive." localhost:8010/result
 
   var data = {
     'username': req.body.username,
     'filenameid': req.body.filenameid,
+    'type': req.body.type || null,
     'success': req.body.success,
     'fail_passed': req.body.fail_passed || null,
     'positive_failed': req.body.positive_failed || null,
-    'delta_criteria_1': req.body.delta_criteria_1 || null,
+    'delta_criteria_array': req.body.delta_criteria_array || null,
     'inspection_date': new Date(),
     'user_comments': req.body.user_comments
   };
 
   // Optimisation/refactor needed here once I understand more.
-  pool.query('INSERT INTO result(username, filenameid, success, fail_passed, positive_failed, delta_criteria_1, inspection_date, user_comments) VALUES($1, $2, $3, $4, $5, $6, $7, $8)', [data.username, data.filenameid, data.success, data.fail_passed, data.positive_failed, data.delta_criteria_1, data.inspection_date, data.user_comments], function(err, result) {
+  pool.query('INSERT INTO result(username, filenameid, success, fail_passed, positive_failed, delta_criteria_array, inspection_date, user_comments) VALUES($1, $2, $3, $4, $5, $6, $7, $8)', [data.username, data.filenameid, data.success, data.fail_passed, data.positive_failed, data.delta_criteria_array, data.inspection_date, data.user_comments], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
     // console.log(res.rows);

@@ -74,7 +74,7 @@ var newGoldenImg = {
     'filename': 'jasmineTestingGoldenImg',
     'url': 'https://placekitten.com/g/601/501',
     'description': 'Plz look at the Wiki Page here: (https://en.wikipedia.org/wiki/Humour) to learn more on this imgage',
-    'criteria_target1': 8,
+    'criteria_array': '[1,2,7,null,6]',
     'passfail': false,
     'explanation': 'This is Failling due to Blurry and also due to a trademark problem.'
   };
@@ -127,7 +127,7 @@ var newResult = {
     'filenameid': 555555,
     'success': false,
     'fail_passed': true,
-    'delta_criteria_1': -3,
+    'delta_criteria_array': '[1,-4,-3,0,0]',
     'user_comments': "The user seems blurry, but the principal object looks in focus enough"
 };
 var resultOid = null;

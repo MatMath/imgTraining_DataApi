@@ -9,9 +9,11 @@ CREATE TABLE public.result
   success boolean NOT NULL, -- Did it succede the Test
   fail_passed boolean, -- The img was suppose to fail, but user clicked Pass.
   positive_failed boolean, -- The img as suppose to Pass but the user click failed.
-  delta_criteria_1 integer, -- Deta between the selection and the target (golden)
   inspection_date date NOT NULL,
-  user_comments text -- Comment from the user
+  user_comments text, -- Comment from the user
+  type text, -- Type of the defect
+  delta_criteria_array text, -- Array of results
+  timeinsec integer
 )
 WITH (
   OIDS=TRUE
@@ -24,6 +26,7 @@ COMMENT ON COLUMN public.result.filenameid IS 'File ID that is link with the gol
 COMMENT ON COLUMN public.result.success IS 'Did it succede the Test';
 COMMENT ON COLUMN public.result.fail_passed IS 'The img was suppose to fail, but user clicked Pass.';
 COMMENT ON COLUMN public.result.positive_failed IS 'The img as suppose to Pass but the user click failed.';
-COMMENT ON COLUMN public.result.delta_criteria_1 IS 'Deta between the selection and the target (golden)';
 COMMENT ON COLUMN public.result.user_comments IS 'Comment from the user';
+COMMENT ON COLUMN public.result.type IS 'Type of the defect';
+COMMENT ON COLUMN public.result.delta_criteria_array IS 'Array of results';
 

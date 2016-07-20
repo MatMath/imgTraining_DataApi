@@ -49,6 +49,16 @@ router.get('/passfailresult', function(req, res, next) {
     });
 });
 
+router.get('/randgolden', function(req, res, next) {
+  // console.log("Inside The Golden Request");
+    pool.query('SELECT * FROM public.randgolden', function(err, result) {
+      // handle an error from the query
+      if(err) {return res.json(err);}
+      // console.log(result.rows);
+      res.send(result.rows);
+    });
+});
+
 
 module.exports = router;
 
