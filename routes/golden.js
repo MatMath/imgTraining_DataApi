@@ -37,7 +37,8 @@ router.post('/', function(req, res) {
     'criteria_array': req.body.criteria_array,
     'creation_date': new Date(),
     'passfail': req.body.passfail,
-    'explanation': req.body.explanation
+    'explanation': req.body.explanation,
+    'deleted': req.body.deleted || null
   };
 
   // Optimisation/refactor needed here once I understand more.

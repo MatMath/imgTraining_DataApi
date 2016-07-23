@@ -51,7 +51,8 @@ router.post('/', function(req, res) {
     'positive_failed': req.body.positive_failed || null,
     'delta_criteria_array': req.body.delta_criteria_array || null,
     'inspection_date': new Date(),
-    'user_comments': req.body.user_comments
+    'user_comments': req.body.user_comments,
+    'timeinsec': req.body.timeinsec
   };
 
   // Optimisation/refactor needed here once I understand more.
