@@ -50,6 +50,17 @@ router.post('/', function(req, res) {
   });
 });
 
+
+router.get('/:goldenOid', function(req, res) {
+  var goldenOid = req.params.goldenOid;
+  pool.query('SELECT * FROM public.golden WHERE oid=($1)', [goldenOid], function(err, result) {
+    // handle an error from the query
+    if (err) {return res.json(err);}
+    // console.log(result.rows);
+    res.json(result.rows);
+  });
+});
+
 router.delete('/:goldenOid', function(req, res) {
   var goldenOid = req.params.goldenOid;
   pool.query('DELETE FROM public.golden WHERE oid=($1)', [goldenOid], function(err, result) {
