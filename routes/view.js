@@ -59,6 +59,25 @@ router.get('/randgolden', function(req, res, next) {
     });
 });
 
+router.get('/totimgfailratio/:username', function(req, res, next) {
+  var usernameid = req.params.username;
+    pool.query('SELECT * FROM public.totimgfailratio WHERE username = $1', [usernameid], function(err, result) {
+      // handle an error from the query
+      if(err) {return res.json(err);}
+      // console.log(result.rows);
+      res.send(result.rows);
+    });
+});
+
+router.get('/totimgfailratio', function(req, res, next) {
+    pool.query('SELECT * FROM public.totimgfailratio', function(err, result) {
+      // handle an error from the query
+      if(err) {return res.json(err);}
+      // console.log(result.rows);
+      res.send(result.rows);
+    });
+});
+
 
 module.exports = router;
 

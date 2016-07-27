@@ -8,5 +8,8 @@
 			<% } else { %>
 			<li><a href="/api/view/passfailresult/<%= user.username %>">/view/passfailresult/<%= user.username %></a>(Count the Total Pass + Fail Positive + Fail Negative for this user.)</li>
 			<% } %>
+		<li><a href="/api/view/totimgfailratio">/view/totimgfailratio</a> (Count the Pass/fail Ratio for all user.)</li>
+		<li><a href="/api/view/totimgfailratio/username">/view/totimgfailratio/(:username)</a> (Count the Pass/fail Ratio for this username.)</li>
+			
     </ul>
 </div>

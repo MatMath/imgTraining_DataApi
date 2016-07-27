@@ -11,7 +11,8 @@ CREATE TABLE public.golden
   passfail boolean NOT NULL, -- Define if the img pass or Fail
   explanation text, -- Explanation on why the Img should be Accepted or Rejected
   type text, -- Type of the img
-  criteria_array text -- Array in sequence of all criteria
+  criteria_array text, -- Array in sequence of all criteria
+  info_url text -- Extra info
 )
 WITH (
   OIDS=TRUE
@@ -27,4 +28,5 @@ COMMENT ON COLUMN public.golden.passfail IS 'Define if the img pass or Fail';
 COMMENT ON COLUMN public.golden.explanation IS 'Explanation on why the Img should be Accepted or Rejected';
 COMMENT ON COLUMN public.golden.type IS 'Type of the img';
 COMMENT ON COLUMN public.golden.criteria_array IS 'Array in sequence of all criteria';
+COMMENT ON COLUMN public.golden.info_url IS 'Extra info';
 

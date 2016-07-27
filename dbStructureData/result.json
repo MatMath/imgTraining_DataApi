@@ -13,7 +13,8 @@ CREATE TABLE public.result
   user_comments text, -- Comment from the user
   type text, -- Type of the defect
   delta_criteria_array text, -- Array of results
-  timeinsec integer
+  timeinsec integer,
+  golden_passfail_state boolean
 )
 WITH (
   OIDS=TRUE
