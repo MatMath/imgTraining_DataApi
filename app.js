@@ -24,13 +24,15 @@ var GOOGLE_CLIENT_SECRET  = process.env.GOOGLE_CLIENT_SECRET;
 // Passport session setup.
 passport.serializeUser(function(googUserInfo, done) {
   // Note: This get called only once on the callback from Google.
-  
+
   // Step1: Extract only the info we need.
   var user = {
     email: googUserInfo.email,
     username: googUserInfo.name.givenName,
-    name: googUserInfo.displayName
+    name: googUserInfo.displayName,
+    role: 'manager'
   };
+  // TODO: Fix the Role by getting it witht he DB directly
   console.log("serialisation:", user);
   // name include Family and given : {
   //   familyName: 'Chiodo',
@@ -39,6 +41,7 @@ passport.serializeUser(function(googUserInfo, done) {
   // Here it could be in a promesses or something or we keep it asynch
   // Step2: Save the user data in the DB is it dosent exist.
   utils.doesUserExist(user);
+
   // eater case if exist already or not just continue since we have all info from Google.
   done(null, user);
 });
@@ -60,7 +63,7 @@ passport.use(new GoogleStrategy({
     // asynchronous verification, for effect...
     process.nextTick(function () {
 
-      // --> Here we have the profile, but the Next dosent pass it???? It get lost somewhere. Where can it endup in the res.user? 
+      // --> Here we have the profile, but the Next dosent pass it???? It get lost somewhere. Where can it endup in the res.user?
       return done(null, profile);
     });
   }
@@ -85,7 +88,7 @@ function ensureAuthenticated(req, res, next) {
 }
 
 // GET /auth/google
-app.get('/auth/google', 
+app.get('/auth/google',
   passport.authenticate('google', {scope: ['profile', 'email']})
 );
 
@@ -129,10 +132,19 @@ app.use('/api/view', ensureAuthenticated, views);
 app.use('/api/golden', ensureAuthenticated, goldens);
 app.use('/api/user', ensureAuthenticated, users);
 app.use('/api/result', ensureAuthenticated, results);
+app.get('/api/whoislogin', ensureAuthenticated, function(req, res, next){
+  console.log("UserData:", req.user);
+  if (req.user) {
+    res.json(req.user);
+  } else {
+    next(new Error('failed to load user details'));
+  }
+
+});
 
 // When all authenticated we can load the app and make sure all routes inside the app are secured.
 app.use('/app/', ensureAuthenticated, express.static(__dirname + '/public/components/good-or-bad-img'));  //Here it should link the the Angular App
-
+app.use('/', ensureAuthenticated, views);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
