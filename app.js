@@ -91,8 +91,8 @@ app.get('/auth/google',
 
 // GET /auth/google/callback
 app.get( '/auth/google/callback',
-        passport.authenticate( 'google', { 
-            successRedirect: '/',
+        passport.authenticate( 'google', {
+            successRedirect: '/app',
             failureRedirect: '/login'
     }));
 
@@ -131,9 +131,7 @@ app.use('/api/user', ensureAuthenticated, users);
 app.use('/api/result', ensureAuthenticated, results);
 
 // When all authenticated we can load the app and make sure all routes inside the app are secured.
-app.use('/', ensureAuthenticated, function(req, res) {
-  res.render('placeholder');
-});  //Here it should link the the Angular App
+app.use('/app/', ensureAuthenticated, express.static(__dirname + '/public/components/good-or-bad-img'));  //Here it should link the the Angular App
 
 
 /// catch 404 and forward to error handler
