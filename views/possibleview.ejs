@@ -1,7 +1,8 @@
 <div>
 <h2>Possible Views:</h2> <br>
 	<ul>
-    	<li><a href="/api/view/pfgolden">/view/pfgolden</a> (Give the Total Passign and Failling image inside the Golden Sample DB.)</li>
+			<li><a href="/app/">/app/</a> Where the Main app live</li>
+			<li><a href="/api/view/pfgolden">/view/pfgolden</a> (Give the Total Passign and Failling image inside the Golden Sample DB.)</li>
     	<li><a href="/api/view/passfailresult">/view/passfailresult</a> (Count the Total Pass + Fail Positive + Fail Negative for all user.)</li>
 	    <% if (!user) { %>
     		<li><a href="/api/view/passfailresult/:username">/view/passfailresult/(:username)</a>(Count the Total Pass + Fail Positive + Fail Negative for this user.)</li>
@@ -10,6 +11,5 @@
 			<% } %>
 		<li><a href="/api/view/totimgfailratio">/view/totimgfailratio</a> (Count the Pass/fail Ratio for all user.)</li>
 		<li><a href="/api/view/totimgfailratio/username">/view/totimgfailratio/(:username)</a> (Count the Pass/fail Ratio for this username.)</li>
-			
     </ul>
 </div>

@@ -144,7 +144,8 @@ app.get('/api/whoislogin', ensureAuthenticated, function(req, res, next){
 
 // When all authenticated we can load the app and make sure all routes inside the app are secured.
 app.use('/app/', ensureAuthenticated, express.static(__dirname + '/public/components/good-or-bad-img'));  //Here it should link the the Angular App
-app.use('/', ensureAuthenticated, views);
+// Probably went too far or something happened in the Angular State or wrong routes, should be catch before and be redirected in the app itself instead.
+app.use('/*', ensureAuthenticated, views);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
