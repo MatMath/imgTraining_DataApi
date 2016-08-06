@@ -38,11 +38,12 @@ router.post('/', function(req, res) {
     'creation_date': new Date(),
     'passfail': req.body.passfail,
     'explanation': req.body.explanation,
+    'info_url': req.body.info_url,
     'deleted': req.body.deleted || null
   };
 
   // Optimisation/refactor needed here once I understand more.
-  pool.query('INSERT INTO golden(filename, url, description, criteria_array, creation_date, passfail, explanation, type) VALUES($1, $2, $3, $4, $5, $6, $7, $8)', [data.filename, data.url, data.description, data.criteria_array, data.creation_date, data.passfail, data.explanation, data.type], function(err, result) {
+  pool.query('INSERT INTO golden(filename, url, description, criteria_array, creation_date, passfail, explanation, type, info_url) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)', [data.filename, data.url, data.description, data.criteria_array, data.creation_date, data.passfail, data.explanation, data.type, data.info_url], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
     // console.log(result.rows);
@@ -72,11 +73,12 @@ router.post('/:goldenOid', function(req, res) {
     'creation_date': new Date(),
     'passfail': req.body.passfail,
     'explanation': req.body.explanation,
+    'info_url': req.body.info_url,
     'deleted': req.body.deleted || null
   };
 
   // Optimisation/refactor needed here once I understand more.
-  pool.query('UPDATE golden SET filename=($1), url=($2), description=($3), criteria_array=($4), passfail=($5), explanation=($6), type=($7) WHERE oid=($8)', [data.filename, data.url, data.description, data.criteria_array, data.passfail, data.explanation, data.type, goldenOid], function(err, result) {
+  pool.query('UPDATE golden SET filename=($1), url=($2), description=($3), criteria_array=($4), passfail=($5), explanation=($6), type=($7), info_url=($8) WHERE oid=($9)', [data.filename, data.url, data.description, data.criteria_array, data.passfail, data.explanation, data.type, data.info_url, goldenOid], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
     // console.log(result.rows);

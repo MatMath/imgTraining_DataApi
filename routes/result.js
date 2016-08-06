@@ -57,7 +57,7 @@ router.post('/', function(req, res) {
   };
 
   // Optimisation/refactor needed here once I understand more.
-  pool.query('INSERT INTO result(username, filenameid, success, fail_passed, positive_failed, delta_criteria_array, inspection_date, user_comments, golden_passfail_state) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)', [data.username, data.filenameid, data.success, data.fail_passed, data.positive_failed, data.delta_criteria_array, data.inspection_date, data.user_comments, data.golden_passfail_state], function(err, result) {
+  pool.query('INSERT INTO result(username, filenameid, success, fail_passed, positive_failed, delta_criteria_array, inspection_date, user_comments, golden_passfail_state, timeinsec) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', [data.username, data.filenameid, data.success, data.fail_passed, data.positive_failed, data.delta_criteria_array, data.inspection_date, data.user_comments, data.golden_passfail_state, data.timeinsec], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
     // console.log(res.rows);
