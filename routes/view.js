@@ -78,6 +78,25 @@ router.get('/totimgfailratio', function(req, res, next) {
     });
 });
 
+router.get('/resultwithcrit', function(req, res, next) {
+    pool.query('SELECT * FROM public.result_w_crit', function(err, result) {
+      // handle an error from the query
+      if(err) {return res.json(err);}
+      // console.log(result.rows);
+      res.json(result.rows);
+    });
+});
+
+router.get('/resultwithcrit/:username', function(req, res, next) {
+    var usernameid = req.params.username;
+    pool.query('SELECT * FROM public.result_w_crit WHERE usernameid = $1', [usernameid], function(err, result) {
+      // handle an error from the query
+      if(err) {return res.json(err);}
+      // console.log(result.rows);
+      res.json(result.rows);
+    });
+});
+
 
 module.exports = router;
 
