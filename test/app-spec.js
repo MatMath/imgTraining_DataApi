@@ -78,10 +78,25 @@ var newGoldenImg = {
     'passfail': false,
     'explanation': 'This is Failling due to Blurry and also due to a trademark problem.'
   };
+var criteria_array = [{
+		"crit_uuid":"Crit1",
+		"value":1
+	},{
+		"crit_uuid":"Crit2",
+		"value":4
+	},{
+		"crit_uuid":"Crit3",
+		"value":5
+	},{
+		"crit_uuid":"Crit9",
+		"value":9
+	}
+];
 var goldenOid = null; //This is not persistant across Describe because it is asynch and inputed at the start
+var goldenUuid = null; //This is not persistant across Describe because it is asynch and inputed at the start
 describe("Testing the Creation and removal of a Golden image", function() {
-	describe("GET POST /golden", function() {
-		
+	describe("GET & POST /golden", function() {
+
 		// Ger the initial Nbr of Golden Images in the system:
 		it("should return the initial number of golden img", function(done) {
 			request.get(base_url_api + 'golden', function(error, response, body) {
@@ -92,20 +107,45 @@ describe("Testing the Creation and removal of a Golden image", function() {
 			});
 		});
 
-		it("Add one Golden Img", function(done) {
+		it('Add one Golden Img', function(done) {
 			// TODO: Add a feedback to the user
 			request.post(base_url_api + 'golden', {form: newGoldenImg}, function(error, response, body) {
 				var parsedAns = JSON.parse(body);
 				goldenOid = parsedAns.oid;
-				console.log("New GoldenImg ID:", parsedAns.oid);
+				goldenUuid = parsedAns.rows[0].uuid;
+				console.log("parsedAns:",parsedAns.rows);
+				console.log("UUID:", goldenUuid);
 				expect(parsedAns.oid).toBeDefined(); //index of the user
+				expect(parsedAns.rows[0].uuid).toBeDefined(); //index of the user
 				done();
 			});
 		});
 
-		it("Should have 1 more image in the list", function(done) {
+		function inputAllCriteria(value){
+			it('Add all the criteria Value of the Golden Img', function(done) {
+				// console.log("UUID2:", goldenUuid);
+				value.golden_uuid = goldenUuid;
+				request.post(base_url_api + 'golden/crit', {form: value}, function(error, response, body) {
+					expect(JSON.parse(body)).toBeDefined(); //index of the user
+					done();
+				});
+			});
+		}
+		for (var i = 0; i < criteria_array.length; i++) {
+			inputAllCriteria(criteria_array[i]);
+		}
+
+		it('Should have 1 more image in the list', function(done) {
 			request.get(base_url_api + 'golden', function(error, response, body) {
-				expect(JSON.parse(body).length - nbrOfgoldenImg).toEqual(1);
+				expect(JSON.parse(body).length).toEqual(nbrOfgoldenImg + 1);
+				done();
+			});
+		});
+
+		it("Should delete all golden Criteria link with the test image", function(done) {
+			// Note the criteria value need to be deleted BEFORE we delete the Image because the UUID is link.
+			request.delete(base_url_api + 'golden/crit/' + goldenUuid, function(error, response, body) {
+				expect(JSON.parse(body).rowCount).toEqual(criteria_array.length);
 				done();
 			});
 		});
