@@ -170,8 +170,24 @@ var newResult = {
     'delta_criteria_array': '[1,-4,-3,0,0]',
     'user_comments': "The user seems blurry, but the principal object looks in focus enough"
 };
-var resultOid = null;
 
+var resultOid = null;
+var resultUuid = null;
+resultValue = [
+	{
+		'criteria_uuid': 'Crit2',
+		'value': 1
+	},{
+		'criteria_uuid': 'Crit3',
+		'value': 2
+	},{
+		'criteria_uuid': 'Crit5',
+		'value': 3
+	},{
+		'criteria_uuid': 'Crit9',
+		'value': 7
+	}
+];
 describe("Adding new result, ", function(){
 	describe('Check the result and adding new one', function() {
 		it("Should get the initial nbr of results for all user", function(done) {
@@ -195,10 +211,26 @@ describe("Adding new result, ", function(){
 			request.post(base_url_api + 'result', {form: newResult}, function(err, resp, body) {
 				var parsedAns = JSON.parse(body);
 				resultOid = parsedAns.oid;
+				resultUuid = parsedAns.rows[0].uuid;
 				expect(resultOid).toBeDefined();
+				expect(resultUuid).toBeDefined();
 				done();
 			});
 		});
+
+		function inputAllCriteria(value){
+			it('Add all Criteria link with that result', function(done) {
+				value.result_uuid = resultUuid;
+				request.post(base_url_api + 'result/crit/', {form: value}, function(err,resp,body) {
+					expect(body).toBeDefined();
+					done();
+				});
+			});
+		}
+
+		for (var i = 0; i < resultValue.length; i++) {
+			inputAllCriteria(resultValue[i]);
+		}
 
 		it('should check the Nbr of result for that user is now 1', function(done) {
 			request.get(base_url_api + 'result/' + testingUser.username, function(err,resp, body){
@@ -216,7 +248,16 @@ describe("Adding new result, ", function(){
 			});
 		});
 
-		it("Should delete The last test created", function(done) {
+		it('Delete all criteria link with the result', function(done) {
+			// Note: We cannot delete the result if there is still criteria value saved
+			request.delete(base_url_api + 'result/crit/' + resultUuid, function(err, resp, body) {
+				console.log("Deleting all the result:", body);
+				expect(JSON.parse(body).rowCount).toEqual(resultValue.length);
+				done();
+			});
+		});
+
+		it('Should delete The last test created', function(done) {
 			// This is more for cleanup when we have to restart the test multiple time
 			console.log("trying to delete result#: ", resultOid);
 			request.delete(base_url_api + 'result/id/' + resultOid, function(error, response, body) {
