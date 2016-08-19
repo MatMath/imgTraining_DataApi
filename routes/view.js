@@ -88,8 +88,8 @@ router.get('/resultwithcrit', function(req, res, next) {
 });
 
 router.get('/resultwithcrit/:username', function(req, res, next) {
-    var usernameid = req.params.username;
-    pool.query('SELECT * FROM public.result_w_crit WHERE usernameid = $1', [usernameid], function(err, result) {
+    var username = req.params.username;
+    pool.query('SELECT * FROM public.result_w_crit WHERE username = $1', [username], function(err, result) {
       // handle an error from the query
       if(err) {return res.json(err);}
       // console.log(result.rows);
@@ -99,9 +99,3 @@ router.get('/resultwithcrit/:username', function(req, res, next) {
 
 
 module.exports = router;
-
-
-
-
-
-

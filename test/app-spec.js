@@ -46,7 +46,7 @@ describe("Testing the Creation of a user", function() {
 		it("should return the initial number of user", function(done) {
 			request.get(base_url_api + 'user', function(error, response, body) {
 				nbrOfUserInit = JSON.parse(body).length;
-				console.log("nbrOfUser is: ", nbrOfUserInit);
+				// console.log("nbrOfUser is: ", nbrOfUserInit);
 				expect(nbrOfUserInit).toBeGreaterThan(2);
 				done();
 			});
@@ -101,7 +101,7 @@ describe("Testing the Creation and removal of a Golden image", function() {
 		it("should return the initial number of golden img", function(done) {
 			request.get(base_url_api + 'golden', function(error, response, body) {
 				nbrOfgoldenImg = JSON.parse(body).length;
-				console.log("nbrOfgoldenImg is: ", nbrOfgoldenImg);
+				// console.log("nbrOfgoldenImg is: ", nbrOfgoldenImg);
 				expect(nbrOfgoldenImg).toBeGreaterThan(2);
 				done();
 			});
@@ -113,8 +113,8 @@ describe("Testing the Creation and removal of a Golden image", function() {
 				var parsedAns = JSON.parse(body);
 				goldenOid = parsedAns.oid;
 				goldenUuid = parsedAns.rows[0].uuid;
-				console.log("parsedAns:",parsedAns.rows);
-				console.log("UUID:", goldenUuid);
+				// console.log("parsedAns:",parsedAns.rows);
+				// console.log("UUID:", goldenUuid);
 				expect(parsedAns.oid).toBeDefined(); //index of the user
 				expect(parsedAns.rows[0].uuid).toBeDefined(); //index of the user
 				done();
@@ -193,7 +193,7 @@ describe("Adding new result, ", function(){
 		it("Should get the initial nbr of results for all user", function(done) {
 			request.get(base_url_api + 'result', function(err, resp, body) {
 				nbrOfResult = JSON.parse(body).length;
-				console.log("Initial Nbr of result in DB:", nbrOfResult);
+				// console.log("Initial Nbr of result in DB:", nbrOfResult);
 				expect(nbrOfResult).toBeGreaterThan(2);
 				done();
 			});
@@ -248,10 +248,24 @@ describe("Adding new result, ", function(){
 			});
 		});
 
+		it('validate that view/resultwithcrit load', function(done) {
+			request.get(base_url_api + 'view/resultwithcrit', function(err, resp, body) {
+				expect(JSON.parse(body).length).toBeGreaterThan(1);
+				done();
+			});
+		});
+
+		it('validate that view/resultwithcrit load for THAT user', function(done) {
+			request.get(base_url_api + 'view/resultwithcrit/' + testingUser.username, function(err, resp, body) {
+				console.log("THAT user:",body);
+				expect(JSON.parse(body).length).toEqual(1);
+				done();
+			});
+		});
+
 		it('Delete all criteria link with the result', function(done) {
 			// Note: We cannot delete the result if there is still criteria value saved
 			request.delete(base_url_api + 'result/crit/' + resultUuid, function(err, resp, body) {
-				console.log("Deleting all the result:", body);
 				expect(JSON.parse(body).rowCount).toEqual(resultValue.length);
 				done();
 			});
@@ -259,7 +273,7 @@ describe("Adding new result, ", function(){
 
 		it('Should delete The last test created', function(done) {
 			// This is more for cleanup when we have to restart the test multiple time
-			console.log("trying to delete result#: ", resultOid);
+			// console.log("trying to delete result#: ", resultOid);
 			request.delete(base_url_api + 'result/id/' + resultOid, function(error, response, body) {
 				console.log(body);
 				expect(JSON.parse(body).rowCount).toEqual(1);
@@ -275,7 +289,7 @@ describe("Testing the Cleanup of alltest at the end", function() {
 	describe("Delete /result/:filenameID", function() {
 		it("Should delete all result with Golden Img Test", function(done) {
 			// This is more for cleanup when we have to restart the test multiple time
-			console.log("trying to delete result#: ", newResult.filenameid);
+			// console.log("trying to delete result#: ", newResult.filenameid);
 			request.delete(base_url_api + 'result/all/' + newResult.filenameid, function(error, response, body) {
 				// console.log(body);
 				expect(JSON.parse(body).rowCount).toEqual(0);
