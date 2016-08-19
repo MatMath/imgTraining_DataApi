@@ -40,6 +40,26 @@ var testingUser = {
 };
 var nbrOfUserInit = 0;
 
+describe('Validating that the criteria are accecible', function() {
+	var totalCriteria = null;
+	it("Get the list of ALL criteria", function(done) {
+		request.get(base_url_api + 'view/criteria', function(err,res,body) {
+			totalCriteria = JSON.parse(body).length;
+			expect(totalCriteria).toBeGreaterThan(8);
+			done();
+		});
+	});
+
+	it("Get the list of ALL Active criteria", function(done) {
+		request.get(base_url_api + 'view/criteria/active', function(err,res,body) {
+			var active = JSON.parse(body).length;
+			expect(active).toBeGreaterThan(1);
+			expect(active).toBeLessThan(totalCriteria);
+			done();
+		});
+	});
+});
+
 describe("Testing the Creation of a user", function() {
 	describe("GET & POST /user", function() {
 		// Ger the initial Nbr of user:

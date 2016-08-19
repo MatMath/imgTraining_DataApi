@@ -4,6 +4,7 @@
   "description": "Connection to the DB via postgres in node",
   "main": "index.js",
   "scripts": {
+    "start": "node app.js",
     "test": "jasmine-node test/security-spec.js --verbose;jasmine-node test/app-spec.js --verbose"
   },
   "author": "",

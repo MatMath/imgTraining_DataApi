@@ -97,5 +97,22 @@ router.get('/resultwithcrit/:username', function(req, res, next) {
     });
 });
 
+router.get('/criteria/active', function(req, res) {
+  // This is the first route that get called by the Front app to get the structure needed to display stuff.
+  pool.query('SELECT * FROM public.criteria WHERE deleted IS NOT TRUE', function(err, result) {
+    if (err) {return res.json(err);}
+    res.json(result.rows);
+  });
+});
+
+router.get('/criteria', function(req, res) {
+  // This is the first route that get called by the Front app to get the structure needed to display stuff.
+  pool.query('SELECT * FROM public.criteria', function(err, result) {
+    if (err) {return res.json(err);}
+    res.json(result.rows);
+  });
+});
+
+
 
 module.exports = router;
