@@ -141,19 +141,16 @@ describe("Testing the Creation and removal of a Golden image", function() {
 			});
 		});
 
-		function inputAllCriteria(value){
-			it('Add all the criteria Value of the Golden Img', function(done) {
-				// console.log("UUID2:", goldenUuid);
-				value.golden_uuid = goldenUuid;
-				request.post(base_url_api + 'golden/crit', {form: value}, function(error, response, body) {
-					expect(JSON.parse(body)).toBeDefined(); //index of the user
-					done();
-				});
+		it('Add all the criteria Value of the Golden Img', function(done) {
+			var body = {
+				valueArray: criteria_array,
+				uuid: goldenUuid
+			}
+			request.post(base_url_api + 'golden/crit', {form: body}, function(error, response, body) {
+				expect(JSON.parse(body)).toBeDefined(); //index of the user
+				done();
 			});
-		}
-		for (var i = 0; i < criteria_array.length; i++) {
-			inputAllCriteria(criteria_array[i]);
-		}
+		});
 
 		it('Should have 1 more image in the list', function(done) {
 			request.get(base_url_api + 'golden', function(error, response, body) {
