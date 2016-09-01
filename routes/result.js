@@ -37,14 +37,25 @@ router.delete('/all/:goldenImgId', function(req, res) {
   });
 });
 
+function stringBuilder(keyValueArr, uuid) {
+  var result = '';
+  for (var i = 0; i < keyValueArr.length; i++) {
+    result = result + "('" + keyValueArr[i].crit_uuid + "' , " + keyValueArr[i].value + " , '" + uuid +"')";
+    if (i !== keyValueArr.length -1) { result = result+','; }
+  }
+  return result;
+}
+
+
 router.post('/crit', function(req, res) {
-  var data = {
-    'result_uuid': req.body.result_uuid,
-    'criteria_uuid': req.body.criteria_uuid,
-    'crit_value': req.body.value
-  };
+  var allCriteria = stringBuilder(req.body.valueArray, req.body.uuid);
+  var text = 'WITH new_values (crit_uuid, crit_value, result_uuid) as ( values ' + allCriteria +' ), ' +
+  'upsert as ( update answer_result m set crit_value = nv.crit_value, result_uuid = nv.result_uuid' +
+  'FROM new_values nv WHERE m.crit_uuid = nv.crit_uuid AND m.result_uuid = nv.result_uuid RETURNING m.* )' +
+  'INSERT INTO answer_result (crit_uuid, crit_value, result_uuid) SELECT crit_uuid, crit_value, result_uuid FROM new_values WHERE NOT EXISTS (SELECT 1 FROM upsert up WHERE up.result_uuid = new_values.result_uuid)';
+  console.log("RESULT Querry: ", text);
   // Optimisation/refactor needed here once I understand more.
-  pool.query('INSERT INTO criteria_result(result_uuid, criteria_uuid, crit_value) VALUES($1, $2, $3)', [data.result_uuid, data.criteria_uuid, data.crit_value], function(err, result) {
+  pool.query(text, [data.result_uuid, data.crit_uuid, data.crit_value], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
     // console.log(result.rows);
@@ -55,7 +66,7 @@ router.post('/crit', function(req, res) {
 router.delete('/crit/:uuid', function(req, res) {
   var result_uuid = req.params.uuid;
   console.log("deleting crit:", result_uuid);
-  pool.query('DELETE FROM public.criteria_result WHERE result_uuid=($1)', [result_uuid], function(err, result) {
+  pool.query('DELETE FROM public.answer_result WHERE result_uuid=($1)', [result_uuid], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
     res.json(result);

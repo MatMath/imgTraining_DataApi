@@ -145,7 +145,7 @@ describe("Testing the Creation and removal of a Golden image", function() {
 			var body = {
 				valueArray: criteria_array,
 				uuid: goldenUuid
-			}
+			};
 			request.post(base_url_api + 'golden/crit', {form: body}, function(error, response, body) {
 				expect(JSON.parse(body)).toBeDefined(); //index of the user
 				done();
@@ -235,19 +235,16 @@ describe("Adding new result, ", function(){
 			});
 		});
 
-		function inputAllCriteria(value){
-			it('Add all Criteria link with that result', function(done) {
-				value.result_uuid = resultUuid;
-				request.post(base_url_api + 'result/crit/', {form: value}, function(err,resp,body) {
-					expect(body).toBeDefined();
-					done();
-				});
+		it('Add all Criteria link with that result', function(done) {
+			var body = {
+				valueArray: resultValue,
+				uuid: resultUuid
+			};
+			request.post(base_url_api + 'result/crit/', {form: body}, function(err,resp,body) {
+				expect(body).toBeDefined();
+				done();
 			});
-		}
-
-		for (var i = 0; i < resultValue.length; i++) {
-			inputAllCriteria(resultValue[i]);
-		}
+		});
 
 		it('should check the Nbr of result for that user is now 1', function(done) {
 			request.get(base_url_api + 'result/' + testingUser.username, function(err,resp, body){
