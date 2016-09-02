@@ -142,11 +142,11 @@ describe("Testing the Creation and removal of a Golden image", function() {
 		});
 
 		it('Add all the criteria Value of the Golden Img', function(done) {
-			var body = {
+			var sentBody = {
 				valueArray: criteria_array,
 				uuid: goldenUuid
 			};
-			request.post(base_url_api + 'golden/crit', {form: body}, function(error, response, body) {
+			request.post(base_url_api + 'golden/crit', {form: sentBody}, function(error, response, body) {
 				expect(JSON.parse(body)).toBeDefined(); //index of the user
 				done();
 			});
@@ -192,16 +192,16 @@ var resultOid = null;
 var resultUuid = null;
 resultValue = [
 	{
-		'criteria_uuid': 'Crit2',
+		'crit_uuid': 'Crit2',
 		'value': 1
 	},{
-		'criteria_uuid': 'Crit3',
+		'crit_uuid': 'Crit3',
 		'value': 2
 	},{
-		'criteria_uuid': 'Crit5',
+		'crit_uuid': 'Crit5',
 		'value': 3
 	},{
-		'criteria_uuid': 'Crit9',
+		'crit_uuid': 'Crit9',
 		'value': 7
 	}
 ];
@@ -236,12 +236,13 @@ describe("Adding new result, ", function(){
 		});
 
 		it('Add all Criteria link with that result', function(done) {
-			var body = {
+			var sendBody = {
 				valueArray: resultValue,
 				uuid: resultUuid
 			};
-			request.post(base_url_api + 'result/crit/', {form: body}, function(err,resp,body) {
+			request.post(base_url_api + 'result/crit/', {form: sendBody}, function(err,resp,body) {
 				expect(body).toBeDefined();
+				expect(body.indexOf('<div>')).toEqual(-1);
 				done();
 			});
 		});
@@ -264,6 +265,7 @@ describe("Adding new result, ", function(){
 
 		it('validate that view/resultwithcrit load', function(done) {
 			request.get(base_url_api + 'view/resultwithcrit', function(err, resp, body) {
+				// console.log("resultwithcrit:",body);
 				expect(JSON.parse(body).length).toBeGreaterThan(1);
 				done();
 			});
@@ -271,7 +273,6 @@ describe("Adding new result, ", function(){
 
 		it('validate that view/resultwithcrit load for THAT user', function(done) {
 			request.get(base_url_api + 'view/resultwithcrit/' + testingUser.username, function(err, resp, body) {
-				console.log("THAT user:",body);
 				expect(JSON.parse(body).length).toEqual(1);
 				done();
 			});
@@ -289,7 +290,6 @@ describe("Adding new result, ", function(){
 			// This is more for cleanup when we have to restart the test multiple time
 			// console.log("trying to delete result#: ", resultOid);
 			request.delete(base_url_api + 'result/id/' + resultOid, function(error, response, body) {
-				console.log(body);
 				expect(JSON.parse(body).rowCount).toEqual(1);
 				done();
 			});

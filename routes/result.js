@@ -50,12 +50,12 @@ function stringBuilder(keyValueArr, uuid) {
 router.post('/crit', function(req, res) {
   var allCriteria = stringBuilder(req.body.valueArray, req.body.uuid);
   var text = 'WITH new_values (crit_uuid, crit_value, result_uuid) as ( values ' + allCriteria +' ), ' +
-  'upsert as ( update answer_result m set crit_value = nv.crit_value, result_uuid = nv.result_uuid' +
-  'FROM new_values nv WHERE m.crit_uuid = nv.crit_uuid AND m.result_uuid = nv.result_uuid RETURNING m.* )' +
+  'upsert as ( update answer_result m set crit_value = nv.crit_value, result_uuid = nv.result_uuid ' +
+  'FROM new_values nv WHERE m.crit_uuid = nv.crit_uuid AND m.result_uuid = nv.result_uuid RETURNING m.* ) ' +
   'INSERT INTO answer_result (crit_uuid, crit_value, result_uuid) SELECT crit_uuid, crit_value, result_uuid FROM new_values WHERE NOT EXISTS (SELECT 1 FROM upsert up WHERE up.result_uuid = new_values.result_uuid)';
   console.log("RESULT Querry: ", text);
   // Optimisation/refactor needed here once I understand more.
-  pool.query(text, [data.result_uuid, data.crit_uuid, data.crit_value], function(err, result) {
+  pool.query(text, function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
     // console.log(result.rows);
