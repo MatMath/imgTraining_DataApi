@@ -34,7 +34,6 @@ router.post('/', function(req, res) {
     name: req.body.name,
     creation_date: new Date()
   };
-  console.log("insideTheUserPost", data);
   // Optimisation/refactor needed here once I understand more.
   pool.query('INSERT INTO users(email, username, name, creation_date) VALUES($1, $2, $3, $4)', [data.email, data.username, data.name, data.creation_date], function(err, result) {
     // handle an error from the query

@@ -20,7 +20,7 @@ var pool = new Pool(config);
 
 router.get('/crit/:uuid', function(req, res) {
   var golden_uuid = req.params.uuid;
-  pool.query('SELECT * FROM public.golden_result WHERE uuid=($1)', [golden_uuid], function(err, result) {
+  pool.query('SELECT * FROM public.golden_result WHERE golden_uuid=($1)', [golden_uuid], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
     res.json(result.rows);
@@ -81,7 +81,6 @@ router.post('/', function(req, res) {
     'url': req.body.url,
     'type': req.body.type || null,
     'description': req.body.description,
-    'criteria_array': req.body.criteria_array,
     'creation_date': new Date(),
     'passfail': req.body.passfail,
     'explanation': req.body.explanation,
@@ -90,11 +89,11 @@ router.post('/', function(req, res) {
   };
 
   // Optimisation/refactor needed here once I understand more.
-  pool.query('INSERT INTO golden(filename, url, description, criteria_array, creation_date, passfail, explanation, type, info_url) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING oid, uuid', [data.filename, data.url, data.description, data.criteria_array, data.creation_date, data.passfail, data.explanation, data.type, data.info_url], function(err, result) {
+  pool.query('INSERT INTO golden(filename, url, description, creation_date, passfail, explanation, type, info_url) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING oid, uuid', [data.filename, data.url, data.description, data.creation_date, data.passfail, data.explanation, data.type, data.info_url], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
     // console.log(result.rows);
-    res.json(result);
+    res.json(result.rows);
   });
 });
 
@@ -138,7 +137,7 @@ router.delete('/:goldenOid', function(req, res) {
   pool.query('DELETE FROM public.golden WHERE oid=($1)', [goldenOid], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
-    res.json(result);
+    res.json(result.rowCount);
   });
 });
 

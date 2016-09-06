@@ -53,7 +53,6 @@ router.post('/crit', function(req, res) {
   'upsert as ( update answer_result m set crit_value = nv.crit_value, result_uuid = nv.result_uuid ' +
   'FROM new_values nv WHERE m.crit_uuid = nv.crit_uuid AND m.result_uuid = nv.result_uuid RETURNING m.* ) ' +
   'INSERT INTO answer_result (crit_uuid, crit_value, result_uuid) SELECT crit_uuid, crit_value, result_uuid FROM new_values WHERE NOT EXISTS (SELECT 1 FROM upsert up WHERE up.result_uuid = new_values.result_uuid)';
-  console.log("RESULT Querry: ", text);
   // Optimisation/refactor needed here once I understand more.
   pool.query(text, function(err, result) {
     // handle an error from the query
@@ -104,18 +103,17 @@ router.post('/', function(req, res) {
     'success': req.body.success,
     'fail_passed': req.body.fail_passed || null,
     'positive_failed': req.body.positive_failed || null,
-    'delta_criteria_array': req.body.delta_criteria_array || null,
     'inspection_date': new Date(),
     'user_comments': req.body.user_comments,
     'timeinsec': req.body.timeinsec
   };
 
   // Optimisation/refactor needed here once I understand more.
-  pool.query('INSERT INTO result(username, filenameid, success, fail_passed, positive_failed, delta_criteria_array, inspection_date, user_comments, golden_passfail_state, timeinsec) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING oid, uuid', [data.username, data.filenameid, data.success, data.fail_passed, data.positive_failed, data.delta_criteria_array, data.inspection_date, data.user_comments, data.golden_passfail_state, data.timeinsec], function(err, result) {
+  pool.query('INSERT INTO result(username, filenameid, success, fail_passed, positive_failed, inspection_date, user_comments, golden_passfail_state, timeinsec) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING oid, uuid', [data.username, data.filenameid, data.success, data.fail_passed, data.positive_failed, data.inspection_date, data.user_comments, data.golden_passfail_state, data.timeinsec], function(err, result) {
     // handle an error from the query
-    if (err) {return res.json(err);}
+    if (err) {return result.json(err);}
     // console.log(res.rows);
-    res.json(result);
+    res.json(result.rows[0]);
   });
 });
 

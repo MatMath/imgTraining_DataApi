@@ -40,6 +40,17 @@ var testingUser = {
 };
 var nbrOfUserInit = 0;
 
+describe("Delete /user/:username", function() {
+	it("Deleting the user in case it exist already (if previous test crashed before the end)", function(done) {
+		// The email is unique
+		request.delete(base_url_api + 'user/' + testingUser.username, function(error, response, body) {
+			// console.log("DELTTING USER: ", body);
+			expect(JSON.parse(body).rowCount).toBeDefined();
+			done();
+		});
+	});
+});
+
 describe('Validating that the criteria are accecible', function() {
 	var totalCriteria = null;
 	it("Get the list of ALL criteria", function(done) {
@@ -94,7 +105,6 @@ var newGoldenImg = {
     'filename': 'jasmineTestingGoldenImg',
     'url': 'https://placekitten.com/g/601/501',
     'description': 'Plz look at the Wiki Page here: (https://en.wikipedia.org/wiki/Humour) to learn more on this imgage',
-    'criteria_array': '[1,2,7,null,6]',
     'passfail': false,
     'explanation': 'This is Failling due to Blurry and also due to a trademark problem.'
   };
@@ -131,12 +141,12 @@ describe("Testing the Creation and removal of a Golden image", function() {
 			// TODO: Add a feedback to the user
 			request.post(base_url_api + 'golden', {form: newGoldenImg}, function(error, response, body) {
 				var parsedAns = JSON.parse(body);
-				goldenOid = parsedAns.oid;
-				goldenUuid = parsedAns.rows[0].uuid;
-				// console.log("parsedAns:",parsedAns.rows);
+				goldenOid = parsedAns[0].oid;
+				goldenUuid = parsedAns[0].uuid;
+				// console.log("parsedAns:",parsedAns);
 				// console.log("UUID:", goldenUuid);
-				expect(parsedAns.oid).toBeDefined(); //index of the user
-				expect(parsedAns.rows[0].uuid).toBeDefined(); //index of the user
+				expect(goldenOid).toBeDefined(); //index of the user
+				expect(goldenUuid).toBeDefined(); //index of the user
 				done();
 			});
 		});
@@ -169,8 +179,8 @@ describe("Testing the Creation and removal of a Golden image", function() {
 
 		it("Should delete only 1 golden test image", function(done) {
 			request.delete(base_url_api + 'golden/' + goldenOid, function(error, response, body) {
-				// console.log(body);
-				expect(JSON.parse(body).rowCount).toEqual(1);
+				console.log('Delete the Golden img', body);
+				expect(JSON.parse(body)).toEqual(1);
 				done();
 			});
 		});
@@ -184,7 +194,6 @@ var newResult = {
     'filenameid': 555555,
     'success': false,
     'fail_passed': true,
-    'delta_criteria_array': '[1,-4,-3,0,0]',
     'user_comments': "The user seems blurry, but the principal object looks in focus enough"
 };
 
@@ -228,7 +237,7 @@ describe("Adding new result, ", function(){
 			request.post(base_url_api + 'result', {form: newResult}, function(err, resp, body) {
 				var parsedAns = JSON.parse(body);
 				resultOid = parsedAns.oid;
-				resultUuid = parsedAns.rows[0].uuid;
+				resultUuid = parsedAns.uuid;
 				expect(resultOid).toBeDefined();
 				expect(resultUuid).toBeDefined();
 				done();
