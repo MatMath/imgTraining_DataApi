@@ -20,7 +20,7 @@ var pool = new Pool(config);
 
 router.get('/crit/:uuid', function(req, res) {
   var golden_uuid = req.params.uuid;
-  pool.query('SELECT * FROM public.golden_result WHERE golden_uuid=($1)', [golden_uuid], function(err, result) {
+  pool.query('SELECT crit_uuid, crit_value FROM public.golden_result AS gold INNER JOIN public.criteria AS crit ON crit.uuid = gold.crit_uuid WHERE gold.golden_uuid=($1) AND crit.deleted IS NOT TRUE', [golden_uuid], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
     res.json(result.rows);
@@ -37,8 +37,6 @@ function stringBuilder(keyValueArr, uuid) {
 }
 
 router.post('/crit', function(req, res) {
-  // $ curl --data "filename=someFilename&url=&'somekittenUrl'description=Unpeuplus&criteria_array=4&passfail=true&explanation=nothing" localhost:8010/golden
-  // console.log('REQUEST BODY: ',req.body);
   var allCriteria = stringBuilder(req.body.valueArray, req.body.uuid);
   var text = 'WITH new_values (crit_uuid, crit_value, golden_uuid) as (values '+ allCriteria + '), upsert as ( ' +
       'update golden_result m ' +
@@ -75,7 +73,6 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-  // $ curl --data "filename=someFilename&url=&'somekittenUrl'description=Unpeuplus&criteria_array=4&passfail=true&explanation=nothing" localhost:8010/golden
   var data = {
     'filename': req.body.filename,
     'url': req.body.url,
@@ -115,7 +112,6 @@ router.post('/:goldenOid', function(req, res) {
     'url': req.body.url,
     'type': req.body.type || null,
     'description': req.body.description,
-    'criteria_array': req.body.criteria_array,
     'creation_date': new Date(),
     'passfail': req.body.passfail,
     'explanation': req.body.explanation,
@@ -124,7 +120,7 @@ router.post('/:goldenOid', function(req, res) {
   };
 
   // Optimisation/refactor needed here once I understand more.
-  pool.query('UPDATE golden SET filename=($1), url=($2), description=($3), criteria_array=($4), passfail=($5), explanation=($6), type=($7), info_url=($8) WHERE oid=($9) RETURNING oid, uuid', [data.filename, data.url, data.description, data.criteria_array, data.passfail, data.explanation, data.type, data.info_url, goldenOid], function(err, result) {
+  pool.query('UPDATE golden SET filename=($1), url=($2), description=($3), passfail=($4), explanation=($5), type=($6), info_url=($7) WHERE oid=($8) RETURNING oid, uuid', [data.filename, data.url, data.description, data.passfail, data.explanation, data.type, data.info_url, goldenOid], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
     // console.log(result.rows);
