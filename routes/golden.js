@@ -120,7 +120,7 @@ router.post('/:goldenOid', function(req, res) {
   };
 
   // Optimisation/refactor needed here once I understand more.
-  pool.query('UPDATE golden SET filename=($1), url=($2), description=($3), passfail=($4), explanation=($5), type=($6), info_url=($7) WHERE oid=($8) RETURNING oid, uuid', [data.filename, data.url, data.description, data.passfail, data.explanation, data.type, data.info_url, goldenOid], function(err, result) {
+  pool.query('UPDATE golden SET filename=($1), url=($2), description=($3), passfail=($4), explanation=($5), type=($6), info_url=($7) , deleted=($8) WHERE oid=($9) RETURNING oid, uuid', [data.filename, data.url, data.description, data.passfail, data.explanation, data.type, data.info_url, data.deleted, goldenOid], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
     // console.log(result.rows);

@@ -23,11 +23,35 @@ router.get('/', function(req, res, next) {
 
 /* GET the total number of good and bad images inside the Golden sample DB. */
 router.get('/pfgolden', function(req, res, next) {
-  // console.log("Inside The Golden Request");
     pool.query('SELECT * FROM public.goldencount', function(err, result) {
       // handle an error from the query
       if(err) {return res.json(err);}
       // console.log(result.rows);
+      res.json(result.rows);
+    });
+});
+
+router.get('/result-per-dates/:username', function(req, res, next) {
+  var usernameid = req.params.username;
+  pool.query('SELECT * FROM public.result-per-user-dates WHERE username = $1', [usernameid], function(err, result) {
+    // handle an error from the query
+    if(err) {return res.json(err);}
+    res.json(result.rows);
+  });
+});
+
+router.get('/result-per-dates', function(req, res, next) {
+  pool.query('SELECT * FROM public.result-per-dates', function(err, result) {
+    // handle an error from the query
+    if(err) {return res.json(err);}
+    res.json(result.rows);
+  });
+});
+
+router.get('/top-failling-img', function(req, res, next) {
+    pool.query('SELECT * FROM public.top-failling-img', function(err, result) {
+      // handle an error from the query
+      if(err) {return res.json(err);}
       res.json(result.rows);
     });
 });
