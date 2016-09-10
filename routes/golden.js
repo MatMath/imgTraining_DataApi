@@ -63,6 +63,14 @@ router.delete('/crit/:uuid', function(req, res) {
   });
 });
 
+router.get('/deletecreteria', function(req, res) {
+  // This delete all criteria from the table where the Golden image is labeled as Deleted.
+  pool.query('SELECT * FROM deletecreteria()', function(err, result){
+    if (err) {return res.json(err);}
+    res.json(result.rows);
+  });
+});
+
 router.get('/', function(req, res) {
   pool.query('SELECT *, oid FROM public.golden', function(err, result) {
     // handle an error from the query
