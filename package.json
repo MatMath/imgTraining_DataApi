@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
-    "test": "jasmine-node test/security-spec.js --verbose;jasmine-node test/app-spec.js --verbose"
+    "test": "jasmine-node test/security-spec.js --verbose;jasmine-node test/crashtest-spec.js --verbose;jasmine-node test/app-spec.js --verbose"
   },
   "author": "",
   "license": "ISC",

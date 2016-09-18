@@ -14,7 +14,7 @@ Testing: $ jasmine-node test
 ## Build flow:
 Step1: (done)
 	- Security
-	- Mutliple API routes protected
+	- Multiple API routes protected
 	- Query to the DB
 	- Testing
 
@@ -28,22 +28,26 @@ Step3:
 	- Connect the Front-end with new routes.
 
 
-## Analytics needed by the Front-end. 
+## Analytics needed by the Front-end.
 ### Trainee Analytics (Filtered by user) so Get with param:
 Nbr of images checked.
 Fail rate on Good & Bad images
 Top 3 problematic decision (added or missing).
-Average inspection time vs other. 
+Average inspection time vs other.
 Graph of success rate split in 100 img since the start.
-Calender view of his progress (% succes vs NbrPer day D3?)
+Calendar view of his progress (% success vs NbrPer day D3?)
 
 ### Trainer Analytics:
 Success rate on Bad images.
 Success rate on Good images.
-Images that is mostly mistaked.
+Images that is mostly mistaken.
 Images that were Contested by trainee + All reason listed of all user. --> need username + Text + All missing or extra item.
 Reason that fail the most.
 Average time for inspection per user.
 Total system Good img vs Bad img.
-Total system Nbr Error 1, 2, 3, 4... 
-Calender view of all user progress (% succes vs NbrPer day D3?).
+Total system Nbr Error 1, 2, 3, 4...
+Calendar view of all user progress (% success vs NbrPer day D3?).
+
+## TODO: Scripts
+- Reset of the Postgres DB of Golden Images.
+-
