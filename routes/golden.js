@@ -113,8 +113,14 @@ router.post('/', function(req, res) {
 });
 
 
-router.get('/:goldenOid', function(req, res) {
+router.get('/:goldenOid', function(req, res, next) {
   var goldenOid = req.params.goldenOid;
+  if (goldenOid != parseInt(goldenOid)) {
+    // Not a number so there is somethign wrong.
+    var err = new Error('Wrong argument');
+    err.status = 400;
+    return next(err);
+  }
   pool.query('SELECT *, oid FROM public.golden WHERE oid=($1)', [goldenOid], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}

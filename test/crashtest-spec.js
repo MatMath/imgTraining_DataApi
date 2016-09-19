@@ -54,15 +54,21 @@ describe('testing error functions', function() {
       done();
     });
   });
+  it('get wrong golden arguments no space', function(done){
+    request.get(base_url_api + 'golden/dosentexist123here', function(err,res,body) {
+      expect(JSON.parse(body).message).toBe('Wrong argument');
+      done();
+    });
+  });
   it('get wrong golden arguments', function(done){
-    request.get(base_url_api + 'golden/dosent %&"" here', function(err,res,body) {
-      expect(body.indexOf('error wrong parameters:')).toBeGreaterThan(-1);
+    request.get(base_url_api + 'golden/dosent &"" here', function(err,res,body) {
+      expect(JSON.parse(body).message).toBe('Wrong argument');
       done();
     });
   });
   it('get wrong result argument', function(done){
-    request.get(base_url_api + 'result/dosent %&"" here', function(err,res,body) {
-      expect(body.indexOf('error wrong parameters:')).toBeGreaterThan(-1);
+    request.get(base_url_api + 'result/dosent &" here', function(err,res,body) {
+      expect(JSON.parse(body).message).toBe('Wrong username');
       done();
     });
   });
@@ -79,7 +85,7 @@ describe('testing error functions', function() {
 
   var sqlWordList = ['SELECT', 'DROP', 'FROM', 'WHERE', 'AND'];
     for (var word in sqlWordList) {
-      console.log('testing: ',sqlWordList[word]);
+      // console.log('testing: ',sqlWordList[word]);
       if (sqlWordList.hasOwnProperty(word)) {
           urlWithWord(sqlWordList[word]);
       }
@@ -90,7 +96,7 @@ describe('testing error functions', function() {
 describe('Closing the server', function() {
   it('logout and closing the server', function(done){
     request.get(base_url + 'logout', function(err, res, body) {
-      expect(res.request.path).toBe('/logout');
+      expect(res.request.path).toBe('/login');
       myApp.closeServer();
       done();
     });

@@ -81,9 +81,15 @@ router.get('/', function(req, res) {
   });
 });
 
-router.get('/:username', function(req, res) {
+router.get('/:username', function(req, res, next) {
   // TODO Security: Could check the Username with current logued user ?
   var usernameid = req.params.username;
+  if (usernameid !== usernameid.replace(/\W/g,'')) {
+    // username contain space and it should not???
+    var err = new Error('Wrong username');
+    err.status = 400;
+    return next(err);
+  }
   pool.query('SELECT * FROM public.result WHERE username = ($1)', [usernameid], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err); }
