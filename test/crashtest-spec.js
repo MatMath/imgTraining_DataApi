@@ -66,6 +66,24 @@ describe('testing error functions', function() {
       done();
     });
   });
+
+  function urlWithWord(word) {
+    it('golden/crit/::uuid with sql:' + word, function(done) {
+      request.get(base_url_api + 'golden/crit/' + word, function(err, res, body) {
+        expect(JSON.parse(body).message).toBe('Wrong argument');
+        expect(JSON.parse(body).error.status).toEqual(400);
+        done();
+      });
+    });
+  }
+
+  var sqlWordList = ['SELECT', 'DROP', 'FROM', 'WHERE', 'AND'];
+    for (var word in sqlWordList) {
+      console.log('testing: ',sqlWordList[word]);
+      if (sqlWordList.hasOwnProperty(word)) {
+          urlWithWord(sqlWordList[word]);
+      }
+    }
 });
 
 

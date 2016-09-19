@@ -18,11 +18,21 @@ process.on('unhandledRejection', function(e) {
 
 var pool = new Pool(config);
 
-router.get('/crit/:uuid', function(req, res) {
+router.get('/crit/:uuid', function(req, res, next) {
+  // Possible error:
+  // Check that uuid dosent contain sertain SQL injection "word" like "Select"
   var golden_uuid = req.params.uuid;
+  var sqlWordList = ['SELECT', 'DROP', 'FROM', 'WHERE', 'AND'];
+  if (new RegExp(sqlWordList.join("|")).test(golden_uuid)) {
+    var err = new Error('Wrong argument');
+    err.status = 400;
+    return next(err);
+  }
   pool.query('SELECT crit_uuid, crit_value FROM public.golden_result AS gold INNER JOIN public.criteria AS crit ON crit.uuid = gold.crit_uuid WHERE gold.golden_uuid=($1) AND crit.deleted IS NOT TRUE', [golden_uuid], function(err, result) {
     // handle an error from the query
-    if (err) {return res.json(err);}
+    if (err) {
+      return next(err);
+    }
     res.json(result.rows);
   });
 });
