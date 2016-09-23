@@ -56,7 +56,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new GoogleStrategy({
     clientID:     GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:8010/auth/google/callback",
+    callbackURL: "http://localhost:" + process.env.PORT + "/auth/google/callback",
     passReqToCallback   : true
   },
   function(request, accessToken, refreshToken, profile, done) {
@@ -179,9 +179,9 @@ app.use(function(err, req, res, next) {
     });
 });
 
-
-app.set('port', process.env.PORT || 8010);
-var server = app.listen(8010, function() {
+var portToUse = process.env.PORT || 8010;
+app.set('port', portToUse);
+var server = app.listen(portToUse, function() {
   console.log('Express server listening on port ' + server.address().port);
 });
 
