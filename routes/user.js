@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Pool = require('pg').Pool;
+var logger = require('../loggerToFile');
 
 var config = {
   host: 'localhost',
@@ -13,7 +14,7 @@ var config = {
 
 
 process.on('unhandledRejection', function(e) {
-  console.log(e.message, e.stack);
+  logger.warn(e.message, e.stack);
 });
 
 var pool = new Pool(config);

@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Pool = require('pg').Pool;
-
+var logger = require('../loggerToFile');
 
 var config = {
   host: 'localhost',
@@ -13,7 +13,7 @@ var config = {
 };
 
 process.on('unhandledRejection', function(e) {
-  console.log(e.message, e.stack);
+  logger.warn(e.message, e.stack);
 });
 
 var pool = new Pool(config);
@@ -53,19 +53,19 @@ router.post('/crit', function(req, res) {
           'set crit_value = nv.crit_value, golden_uuid = nv.golden_uuid ' +
       'FROM new_values nv WHERE m.crit_uuid = nv.crit_uuid AND m.golden_uuid = nv.golden_uuid RETURNING m.* ) ' +
   'INSERT INTO golden_result (crit_uuid, crit_value, golden_uuid) SELECT crit_uuid, crit_value, golden_uuid FROM new_values WHERE NOT EXISTS (SELECT 1 FROM upsert up WHERE up.golden_uuid = new_values.golden_uuid)';
-  // console.log('QUERRY GOLDEN CRIT: ', text);
+  logger.debug('QUERRY GOLDEN CRIT: ', text);
   // Optimisation/refactor needed here once I understand more.
   pool.query(text, function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
-    // console.log(result.rows);
+    logger.warn(result.rows);
     res.json(result);
   });
 });
 
 router.delete('/crit/:uuid', function(req, res) {
   var golden_uuid = req.params.uuid;
-  console.log("deleting crit:", golden_uuid);
+  logger.debug("deleting crit:", golden_uuid);
   pool.query('DELETE FROM public.golden_result WHERE golden_uuid=($1)', [golden_uuid], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
@@ -85,7 +85,7 @@ router.get('/', function(req, res) {
   pool.query('SELECT *, oid FROM public.golden', function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
-    // console.log(result.rows);
+    logger.debug(result.rows);
     res.json(result.rows);
   });
 });
@@ -107,7 +107,7 @@ router.post('/', function(req, res) {
   pool.query('INSERT INTO golden(filename, url, description, creation_date, passfail, explanation, type, info_url) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING oid, uuid', [data.filename, data.url, data.description, data.creation_date, data.passfail, data.explanation, data.type, data.info_url], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
-    // console.log(result.rows);
+    logger.debug(result.rows);
     res.json(result.rows);
   });
 });
@@ -124,7 +124,7 @@ router.get('/:goldenOid', function(req, res, next) {
   pool.query('SELECT *, oid FROM public.golden WHERE oid=($1)', [goldenOid], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
-    // console.log(result.rows);
+    logger.debug(result.rows);
     res.json(result.rows);
   });
 });
@@ -147,7 +147,7 @@ router.post('/:goldenOid', function(req, res) {
   pool.query('UPDATE golden SET filename=($1), url=($2), description=($3), passfail=($4), explanation=($5), type=($6), info_url=($7) , deleted=($8) WHERE oid=($9) RETURNING oid, uuid', [data.filename, data.url, data.description, data.passfail, data.explanation, data.type, data.info_url, data.deleted, goldenOid], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
-    // console.log(result.rows);
+    logger.debug(result.rows);
     res.json(result.rows);
   });
 });

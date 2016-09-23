@@ -1,10 +1,15 @@
 // For Oauth2, See https://github.com/lelylan/simple-oauth2#express-and-github-example
+/*jshint esversion: 6 */
 
+// Trying Winston for logging on the console AND in a Logfile
 var express = require('express');
 var app = express();
 var path = require('path');
 var cors = require('cors');
 var bodyParser = require('body-parser');
+
+// Debug Stuff
+var logger = require('./loggerToFile');
 
 // File load
 var views = require('./routes/view');
@@ -33,7 +38,7 @@ passport.serializeUser(function(googUserInfo, done) {
     role: 'manager'
   };
   // TODO: Fix the Role by getting it witht he DB directly
-  console.log("serialisation:", user);
+  logger.debug("serialisation:", user);
   // name include Family and given : {
   //   familyName: 'Chiodo',
   //   givenName: 'Mathieu'
@@ -47,7 +52,7 @@ passport.serializeUser(function(googUserInfo, done) {
 });
 passport.deserializeUser(function(obj, done) {
     // Note: This get call at each routes we get that are secured.
-    // console.log("deserialisation: ", obj);
+    logger.debug("deserialisation: ", obj);
     // Not sure what to do with this yet.
   done(null, obj);
 });
@@ -80,7 +85,7 @@ app.use( passport.session());
 // Simple route middleware to ensure user is authenticated.
 function ensureAuthenticated(req, res, next) {
   if (process.env.FAKE_AUTH === "authenticated") {
-    // console.log("Faking Auth");
+    logger.debug("Faking Auth");
     return next();
   }
   if (req.isAuthenticated()) {return next();}
@@ -133,7 +138,7 @@ app.use('/api/golden', ensureAuthenticated, goldens);
 app.use('/api/user', ensureAuthenticated, users);
 app.use('/api/result', ensureAuthenticated, results);
 app.get('/api/whoislogin', ensureAuthenticated, function(req, res, next){
-  console.log("UserData:", req.user);
+  logger.info("UserData:", req.user);
   if (req.user) {
     res.json(req.user);
   } else {
@@ -159,6 +164,7 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
+      logger.warn('Error:', err);
         res.status(err.status || 500);
         res.json({
             message: err.message,
@@ -182,7 +188,7 @@ app.use(function(err, req, res, next) {
 var portToUse = process.env.PORT || 8010;
 app.set('port', portToUse);
 var server = app.listen(portToUse, function() {
-  console.log('Express server listening on port ' + server.address().port);
+  logger.warn('Express server listening on port ' + server.address().port);
 });
 
 exports.closeServer = function(){

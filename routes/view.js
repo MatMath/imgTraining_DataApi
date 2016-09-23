@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var Pool = require('pg').Pool;
+var logger = require('../loggerToFile');
 
 var config = {
   host: 'localhost',
@@ -13,7 +14,7 @@ var config = {
 };
 
 process.on('unhandledRejection', function(e) {
-  console.log(e.message, e.stack);
+  logger.warn(e.message, e.stack);
 });
 
 var pool = new Pool(config);
@@ -26,7 +27,7 @@ router.get('/pfgolden', function(req, res, next) {
     pool.query('SELECT * FROM public.goldencount', function(err, result) {
       // handle an error from the query
       if(err) {return res.json(err);}
-      // console.log(result.rows);
+      logger.debug(result.rows);
       res.json(result.rows);
     });
 });
@@ -74,11 +75,11 @@ router.get('/passfailresult', function(req, res, next) {
 });
 
 router.get('/randgolden', function(req, res, next) {
-  // console.log("Inside The Golden Request");
+  logger.debug("Inside The Golden Request");
     pool.query('SELECT * FROM public.randgolden', function(err, result) {
       // handle an error from the query
       if(err) {return res.json(err);}
-      // console.log("randgolden:", result.rows);
+      logger.debug("randgolden:", result.rows);
       res.json(result.rows);
     });
 });
@@ -88,7 +89,7 @@ router.get('/totimgfailratio/:username', function(req, res, next) {
     pool.query('SELECT * FROM public.totimgfailratio WHERE username = $1', [usernameid], function(err, result) {
       // handle an error from the query
       if(err) {return res.json(err);}
-      // console.log(result.rows);
+      logger.debug(result.rows);
       res.send(result.rows);
     });
 });
@@ -97,7 +98,7 @@ router.get('/totimgfailratio', function(req, res, next) {
     pool.query('SELECT * FROM public.totimgfailratio', function(err, result) {
       // handle an error from the query
       if(err) {return res.json(err);}
-      // console.log(result.rows);
+      logger.debug(result.rows);
       res.send(result.rows);
     });
 });
@@ -106,7 +107,7 @@ router.get('/resultwithcrit', function(req, res, next) {
     pool.query('SELECT * FROM public.result_w_crit', function(err, result) {
       // handle an error from the query
       if(err) {return res.json(err);}
-      // console.log(result.rows);
+      logger.debug(result.rows);
       res.json(result.rows);
     });
 });
@@ -116,7 +117,7 @@ router.get('/resultwithcrit/:username', function(req, res, next) {
     pool.query('SELECT * FROM public.result_w_crit WHERE username = $1', [username], function(err, result) {
       // handle an error from the query
       if(err) {return res.json(err);}
-      // console.log(result.rows);
+      logger.debug(result.rows);
       res.json(result.rows);
     });
 });

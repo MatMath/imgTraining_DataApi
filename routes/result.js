@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Pool = require('pg').Pool;
-
+var logger = require('../loggerToFile');
 
 var config = {
   host: 'localhost',
@@ -14,7 +14,7 @@ var config = {
 
 
 process.on('unhandledRejection', function(e) {
-  console.log(e.message, e.stack);
+  logger.warn(e.message, e.stack);
 });
 
 var pool = new Pool(config);
@@ -57,14 +57,14 @@ router.post('/crit', function(req, res) {
   pool.query(text, function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
-    // console.log(result.rows);
+    logger.debug(result.rows);
     res.json(result);
   });
 });
 
 router.delete('/crit/:uuid', function(req, res) {
   var result_uuid = req.params.uuid;
-  console.log("deleting crit:", result_uuid);
+  logger.debug("deleting crit:", result_uuid);
   pool.query('DELETE FROM public.answer_result WHERE result_uuid=($1)', [result_uuid], function(err, result) {
     // handle an error from the query
     if (err) {return res.json(err);}
@@ -118,7 +118,7 @@ router.post('/', function(req, res) {
   pool.query('INSERT INTO result(username, filenameid, success, fail_passed, positive_failed, inspection_date, user_comments, golden_passfail_state, timeinsec) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING oid, uuid', [data.username, data.filenameid, data.success, data.fail_passed, data.positive_failed, data.inspection_date, data.user_comments, data.golden_passfail_state, data.timeinsec], function(err, result) {
     // handle an error from the query
     if (err) {return result.json(err);}
-    // console.log(res.rows);
+    logger.debug(res.rows);
     res.json(result.rows[0]);
   });
 });
