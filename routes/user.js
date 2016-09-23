@@ -2,16 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Pool = require('pg').Pool;
 var logger = require('../loggerToFile');
-
-var config = {
-  host: 'localhost',
-  user: 'mathieu',
-  password: 'none',
-  database: 'goodbad',
-  max: 10,
-  idleTimeoutMillis: 30000
-};
-
+var config = require('../db.setting');
 
 process.on('unhandledRejection', function(e) {
   logger.warn(e.message, e.stack);
