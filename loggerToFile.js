@@ -20,7 +20,7 @@ const logger = new (winston.Logger)({
       level: 'info'
     }),
     new (winston.transports.File)({
-      filename: `${logDir}/results_${new Date().getMonth()}-${new Date().getDay()}.log`,
+      filename: `${logDir}/results_${new Date().getMonth()}-${new Date().getDate()}.log`,
       timestamp: tsFormat,
       level: env === 'development' ? 'debug' : 'info'
     })
