@@ -23,15 +23,17 @@ Custom matchers help to document the intent of your specs, and can help to remov
 beforeEach(function() {
 this.addMatchers({});
 */
+var logger = require('../loggerToFile');
 
 process.env.GOOGLE_CLIENT_ID = "fakeID";
 process.env.GOOGLE_CLIENT_SECRET = "fakeSecret";
 // I could test against a real server, but what I really want is to test the flow on my side when I get the answer back with passeport. And it is not good practice to test against a real server.
 // I tried to mock only the receiving answer, but it seems that is is harder than expected... So... I will by-pass the middleware completely when testing
 process.env.FAKE_AUTH = "authenticated"; //This fake the Auth so the user appears to be loguedin.
+var portToUse = process.env.PORT || 8010;
 var request = require("request");
 var myApp = require("../app.js");
-var base_url = 'http://localhost:8010/';
+var base_url = 'http://localhost:'+ portToUse +'/';
 var base_url_api = base_url + 'api/';
 
 var testingUser = {
@@ -76,6 +78,7 @@ describe('testing error functions', function() {
   function urlWithWord(word) {
     it('golden/crit/::uuid with sql:' + word, function(done) {
       request.get(base_url_api + 'golden/crit/' + word, function(err, res, body) {
+				logger.debug("golden/crit/", body);
         expect(JSON.parse(body).message).toBe('Wrong argument');
         expect(JSON.parse(body).error.status).toEqual(400);
         done();

@@ -29,9 +29,10 @@ process.env.GOOGLE_CLIENT_SECRET = "fakeSecret";
 // I could test against a real server, but what I really want is to test the flow on my side when I get the answer back with passeport. And it is not good practice to test against a real server.
 // I tried to mock only the receiving answer, but it seems that is is harder than expected... So... I will by-pass the middleware completely when testing
 process.env.FAKE_AUTH = "authenticated"; //This fake the Auth so the user appears to be loguedin.
+var portToUse = process.env.PORT || 8010;
 var request = require("request");
 var myApp = require("../app.js");
-var base_url_api = "http://localhost:8010/api/";
+var base_url_api = "http://localhost:"+ portToUse + "/api/";
 
 var testingUser = {
 		username: 'jasmineTest',

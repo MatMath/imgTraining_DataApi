@@ -26,11 +26,12 @@ this.addMatchers({});
 
 process.env.GOOGLE_CLIENT_ID = "FakeID";
 process.env.GOOGLE_CLIENT_SECRET = "FakeSecret";
+var portToUse = process.env.PORT || 8010;
 
 var request = require("request");
 var myApp = require("../app.js");
 var qs = require('querystring');
-var base_url = "http://localhost:8010/";
+var base_url = "http://localhost:"+ portToUse +"/";
 console.log("ClientID:", process.env.GOOGLE_CLIENT_ID);
 console.log("Secret:", process.env.GOOGLE_CLIENT_SECRET);
 
@@ -82,7 +83,7 @@ describe('Test redirect of the routes to login: ', function() {
 		  name: "plzDont Save Me"
 		};
 		request.post({url: base_url + 'api/user', form: data}, function(err, res, body) {
-			// TODO: Not sure why here the "res.request.path" dosent work and do not equal to /login like the Get request ?!? 
+			// TODO: Not sure why here the "res.request.path" dosent work and do not equal to /login like the Get request ?!?
 			expect(res.headers.location).toBe('/login'); //I have to find the information inside the headers, that is strange.
 			done();
 		});
@@ -96,7 +97,7 @@ describe('Test redirect of the routes to login: ', function() {
 			done();
 		});
 	});
-	
+
 	// Result routing
 	it('api/result routes security', function(done) {
 		request.get(base_url + 'api/result', function(err, res, body) {
