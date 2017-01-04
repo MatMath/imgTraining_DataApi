@@ -8,6 +8,8 @@ API level: Some routes are for information and some other routes are the Data it
 The app will be loaded when the Node pass the security layer.
 
 Pre-requisite: Having Postgress running with the DB (dump of it in the dbStructureData or you can easily create it directly.)
+Starting Postgress: "pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start"
+- To Stop it: "pg_ctl -D /usr/local/var/postgres stop -s -m fast"
 Running: $ node app.js
 Testing: $ jasmine-node test
 
@@ -51,3 +53,6 @@ Calendar view of all user progress (% success vs NbrPer day D3?).
 ## TODO: Scripts
 - Reset of the Postgres DB of Golden Images.
 -
+
+## Debug
+some error after seting up postgres: http://dba.stackexchange.com/questions/83984/connect-to-postgresql-server-fatal-no-pg-hba-conf-entry-for-host

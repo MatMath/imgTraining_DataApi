@@ -7,6 +7,7 @@ var app = express();
 var path = require('path');
 var cors = require('cors');
 var bodyParser = require('body-parser');
+app.use(require('express-bunyan-logger')());
 
 // Debug Stuff
 var logger = require('./loggerToFile');
